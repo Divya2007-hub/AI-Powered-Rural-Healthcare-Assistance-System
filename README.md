@@ -68,4 +68,7 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
   the supplying facility.
 - Accounts: register/login/logout with DB-backed session tokens, profile editing,
   and triage history that is saved automatically for signed-in users.
-- Translations, SMS support, and the pharmacist portal are not built yet.
+- Pharmacist portal: users with the `pharmacist` role can manage their facility's
+  medicine stock (`GET/POST/PATCH/DELETE /api/v1/pharmacist/stock`). In development,
+  a demo pharmacist is seeded as `pharmacist@sevacare.demo` / `Pharmacist123`.
+- Translations and SMS support are not built yet.

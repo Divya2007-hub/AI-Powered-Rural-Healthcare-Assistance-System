@@ -17,6 +17,10 @@ Base path: `/api/v1`
 | DELETE | `/history/triage/{id}` | Deletes one saved triage result |
 | GET | `/facilities/nearby` | Lists nearby healthcare facilities from the database |
 | GET | `/medicines/availability` | Searches medicine stock across facilities |
+| GET | `/pharmacist/stock` | Lists the signed-in pharmacist's facility stock |
+| POST | `/pharmacist/stock` | Adds a medicine stock entry for the pharmacist's facility |
+| PATCH | `/pharmacist/stock/{id}` | Updates one of the pharmacist's stock entries |
+| DELETE | `/pharmacist/stock/{id}` | Removes one of the pharmacist's stock entries |
 
 Further endpoints will be defined here before they are implemented.
 
@@ -220,6 +224,7 @@ Requires the bearer token. Returns the user:
   "name": "Asha Devi",
   "email": "asha@example.com",
   "language": "en",
+  "role": "patient",
   "created_at": "2026-10-23T10:00:00"
 }
 ```
@@ -266,3 +271,70 @@ history automatically. Anonymous calls are not saved.
 Requires the bearer token. Deletes one of the user's own entries and returns
 `204 No Content`. Returns `404` when the entry does not exist or belongs to
 another user.
+
+## Pharmacist portal
+
+These endpoints require a bearer token belonging to a user with the `pharmacist`
+role that is linked to a facility. Patients receive `403 Forbidden`; anonymous
+requests receive `401 Unauthorized`. A pharmacist can only see and change stock
+for their own facility.
+
+In development, the app seeds a demo pharmacist:
+
+```
+email: pharmacist@sevacare.demo
+password: Pharmacist123
+facility: Seva Pharmacy
+```
+
+### GET /pharmacist/stock
+
+Returns the pharmacist's facility and its medicine stock, sorted by medicine name.
+
+```json
+{
+  "facility_id": 4,
+  "facility_name": "Seva Pharmacy",
+  "medicines": [
+    {
+      "id": 10,
+      "medicine_name": "Paracetamol 500mg",
+      "category": "Fever",
+      "in_stock": true,
+      "quantity": 120,
+      "unit": "tablets",
+      "price": 2.5,
+      "updated_at": "2026-10-23T10:00:00"
+    }
+  ],
+  "count": 1
+}
+```
+
+### POST /pharmacist/stock
+
+```json
+{
+  "medicine_name": "Cetirizine 10mg",
+  "category": "Allergy",
+  "in_stock": true,
+  "quantity": 40,
+  "unit": "strips",
+  "price": 25.0
+}
+```
+
+Returns `201 Created` with the created stock entry. `medicine_name` is required;
+`category`, `quantity`, `unit`, and `price` are optional. Quantity and price must
+not be negative.
+
+### PATCH /pharmacist/stock/{id}
+
+Accepts any subset of `category`, `in_stock`, `quantity`, `unit`, and `price`.
+Returns `200 OK` with the updated entry, or `404` when the entry does not exist or
+belongs to another facility.
+
+### DELETE /pharmacist/stock/{id}
+
+Returns `204 No Content`, or `404` when the entry does not exist or belongs to
+another facility.

@@ -1346,3 +1346,141 @@ main {
     align-items: flex-start;
   }
 }
+
+/* ==========================================================================
+   Pharmacy portal
+   ========================================================================== */
+
+.pharmacy {
+  padding: 32px 8px 24px;
+}
+
+.pharmacy h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.2;
+  color: var(--green-900);
+}
+
+.pharmacy .triage-lead {
+  margin-bottom: 22px;
+}
+
+.add-medicine {
+  padding: 22px 24px;
+  margin-bottom: 28px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(19, 111, 84, 0.1);
+}
+
+.add-medicine h2 {
+  margin: 0 0 16px;
+  font-size: 1.2rem;
+  color: var(--green-900);
+}
+
+.add-medicine-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.add-medicine .field-checkbox {
+  align-self: end;
+}
+
+.stock-section h2 {
+  margin: 0 0 14px;
+  font-size: 1.25rem;
+  color: var(--green-900);
+}
+
+.stock-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.stock-row {
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(19, 111, 84, 0.08);
+}
+
+.stock-row-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.stock-row-head h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.stock-row-head .medicine-category {
+  margin: 0;
+}
+
+.stock-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.stock-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--green-700);
+}
+
+.stock-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 16px;
+  margin-bottom: 14px;
+}
+
+.stock-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 760px) {
+  .add-medicine-grid,
+  .stock-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .add-medicine {
+    padding: 18px;
+  }
+
+  .add-medicine-grid,
+  .stock-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .stock-row-head {
+    flex-direction: column;
+  }
+}
+
+.add-medicine-grid .field,
+.stock-fields .field {
+  margin-bottom: 0;
+}

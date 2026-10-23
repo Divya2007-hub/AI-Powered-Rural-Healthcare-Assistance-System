@@ -4,6 +4,7 @@ import { clearToken, getToken } from '../api/token.js'
 import AuthScreen from '../features/auth/AuthScreen.jsx'
 import NearbyHealthcare from '../features/facilities/NearbyHealthcare.jsx'
 import MedicineAvailability from '../features/medicine/MedicineAvailability.jsx'
+import PharmacyPortal from '../features/pharmacist/PharmacyPortal.jsx'
 import Profile from '../features/profile/Profile.jsx'
 import SymptomCheck from '../features/triage/SymptomCheck.jsx'
 import { LANGUAGES } from '../i18n/languages.js'
@@ -87,6 +88,12 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const openPharmacy = () => {
+    setMessage('')
+    setView('pharmacy')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const openAuth = () => {
     setMessage('')
     setView('auth')
@@ -139,6 +146,13 @@ function App() {
     languageRef.current?.focus({ preventScroll: true })
   }
 
+  const navItems =
+    user?.role === 'pharmacist'
+      ? NAV_ITEMS.flatMap((item) =>
+          item.id === 'login' ? [{ id: 'pharmacy', label: 'Pharmacy' }, item] : [item],
+        )
+      : NAV_ITEMS
+
   return (
     <div className="page">
       <a className="skip-link" href="#main">Skip to main content</a>
@@ -155,13 +169,14 @@ function App() {
 
           <nav className="main-nav" aria-label="Main navigation">
             <ul>
-              {NAV_ITEMS.map((item) => {
+              {navItems.map((item) => {
                 const isLoginItem = item.id === 'login'
                 const isActive =
                   (item.id === 'home' && view === 'home') ||
                   (item.id === 'symptoms' && view === 'symptoms') ||
                   (item.id === 'nearby' && view === 'nearby') ||
                   (item.id === 'medicine' && view === 'medicine') ||
+                  (item.id === 'pharmacy' && view === 'pharmacy') ||
                   (isLoginItem && (view === 'auth' || view === 'profile'))
 
                 const onClick =
@@ -173,11 +188,13 @@ function App() {
                         ? openNearby
                         : item.id === 'medicine'
                           ? openMedicine
-                          : isLoginItem
-                            ? user
-                              ? openProfile
-                              : openAuth
-                            : () => comingSoon(item.label)
+                          : item.id === 'pharmacy'
+                            ? openPharmacy
+                            : isLoginItem
+                              ? user
+                                ? openProfile
+                                : openAuth
+                              : () => comingSoon(item.label)
 
                 const label = isLoginItem && user ? 'Profile' : item.label
 
@@ -220,6 +237,8 @@ function App() {
           <NearbyHealthcare onBack={goHome} />
         ) : view === 'medicine' ? (
           <MedicineAvailability onBack={goHome} />
+        ) : view === 'pharmacy' && user?.role === 'pharmacist' ? (
+          <PharmacyPortal onBack={goHome} />
         ) : view === 'auth' ? (
           <AuthScreen onAuthenticated={handleAuthenticated} onBack={goHome} />
         ) : view === 'profile' && user ? (

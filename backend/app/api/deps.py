@@ -38,3 +38,12 @@ def get_current_user_optional(
     service: AuthService = Depends(get_auth_service),
 ) -> User | None:
     return service.resolve_token(token) if token else None
+
+
+def get_current_pharmacist(user: User = Depends(get_current_user)) -> User:
+    if user.role != "pharmacist" or user.facility_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Pharmacist access required.",
+        )
+    return user

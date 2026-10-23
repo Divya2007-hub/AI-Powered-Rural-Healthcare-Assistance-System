@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import inspect, text
 
 from app.api.v1.routes import api_router
 from app.core.config import settings
 from app.core.database import Base, SessionLocal, engine
+from app.core.security import hash_password
 from app.models import facility, history, medicine, user  # noqa: F401  (registers models with Base)
 
 
@@ -19,10 +21,34 @@ def create_app() -> FastAPI:
     )
 
     Base.metadata.create_all(bind=engine)
+    _ensure_user_columns()
     _seed_data()
 
     app.include_router(api_router, prefix=settings.api_v1_prefix)
     return app
+
+
+def _ensure_user_columns() -> None:
+    """Add columns introduced after the first release of the users table."""
+    inspector = inspect(engine)
+    if "users" not in inspector.get_table_names():
+        return
+
+    columns = {column["name"] for column in inspector.get_columns("users")}
+    statements = []
+    if "role" not in columns:
+        statements.append(
+            "ALTER TABLE users ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'patient'"
+        )
+    if "facility_id" not in columns:
+        statements.append(
+            "ALTER TABLE users ADD COLUMN facility_id INTEGER REFERENCES facilities(id)"
+        )
+
+    if statements:
+        with engine.begin() as connection:
+            for statement in statements:
+                connection.execute(text(statement))
 
 
 def _seed_data() -> None:
@@ -35,8 +61,35 @@ def _seed_data() -> None:
             _seed_facilities(db)
         if db.query(MedicineStock).count() == 0:
             _seed_medicines(db)
+        if settings.environment == "development":
+            _seed_pharmacist(db)
     finally:
         db.close()
+
+
+def _seed_pharmacist(db) -> None:
+    from app.models.facility import Facility
+    from app.models.user import User
+
+    email = "pharmacist@sevacare.demo"
+    if db.query(User).filter(User.email == email).first() is not None:
+        return
+
+    facility = db.query(Facility).filter(Facility.name == "Seva Pharmacy").first()
+    if facility is None:
+        return
+
+    db.add(
+        User(
+            name="Demo Pharmacist",
+            email=email,
+            password_hash=hash_password("Pharmacist123"),
+            language="en",
+            role="pharmacist",
+            facility_id=facility.id,
+        )
+    )
+    db.commit()
 
 
 def _seed_facilities(db) -> None:

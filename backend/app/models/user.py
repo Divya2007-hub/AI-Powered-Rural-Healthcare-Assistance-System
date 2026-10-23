@@ -13,8 +13,11 @@ class User(Base):
     email = Column(String(255), unique=True, index=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     language = Column(String(8), default="en", nullable=False)
+    role = Column(String(20), default="patient", nullable=False)
+    facility_id = Column(Integer, ForeignKey("facilities.id"), nullable=True)
     created_at = Column(DateTime, default=utcnow, nullable=False)
 
+    facility = relationship("Facility")
     sessions = relationship("AuthSession", back_populates="user", cascade="all, delete-orphan")
     triage_history = relationship("TriageHistory", back_populates="user", cascade="all, delete-orphan")
 

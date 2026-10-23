@@ -1,6 +1,15 @@
 from fastapi import APIRouter
 
-from app.api.v1.routes import auth, facilities, health, history, medicines, triage, users
+from app.api.v1.routes import (
+    auth,
+    facilities,
+    health,
+    history,
+    medicines,
+    pharmacist,
+    triage,
+    users,
+)
 
 api_router = APIRouter()
 
@@ -11,3 +20,4 @@ api_router.include_router(triage.router, tags=["triage"])
 api_router.include_router(history.router, tags=["history"])
 api_router.include_router(facilities.router, tags=["facilities"])
 api_router.include_router(medicines.router, tags=["medicines"])
+api_router.include_router(pharmacist.router, tags=["pharmacist"])
