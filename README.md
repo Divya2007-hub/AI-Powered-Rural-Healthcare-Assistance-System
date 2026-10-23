@@ -63,4 +63,7 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
   seeded with demo data on first start.
 - Frontend "Nearby Healthcare" screen filters facilities by place, type, and
   emergency/24x7 availability, and shows distance and contact details.
-- Medicine availability, login, and translations are not built yet.
+- `GET /api/v1/medicines/availability` searches medicine stock by name, place,
+  and stock status; the "Medicine Availability" screen shows stock, price, and
+  the supplying facility.
+- Login and translations are not built yet.

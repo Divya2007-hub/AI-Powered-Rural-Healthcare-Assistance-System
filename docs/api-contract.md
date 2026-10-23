@@ -9,6 +9,7 @@ Base path: `/api/v1`
 | GET | `/health` | Reports that the backend is running |
 | POST | `/triage/symptoms` | Returns urgency guidance for reported symptoms |
 | GET | `/facilities/nearby` | Lists nearby healthcare facilities from the database |
+| GET | `/medicines/availability` | Searches medicine stock across facilities |
 
 Further endpoints will be defined here before they are implemented.
 
@@ -108,6 +109,52 @@ distance (closest first, unknown distances last).
       "open_24x7": false,
       "emergency_services": false,
       "distance_km": 1.6
+    }
+  ],
+  "count": 1
+}
+```
+
+### Errors
+
+- `422 Unprocessable Entity` when a query parameter fails validation.
+
+## GET /medicines/availability
+
+Searches medicine stock across facilities, sorted by facility distance (closest
+first). Availability and prices are informational; the API never recommends a
+medicine or a dosage.
+
+### Query parameters
+
+| Parameter | Type | Rules |
+|---|---|---|
+| `medicine` | string | Optional. Case-insensitive partial match on the medicine name. Max 120 characters. |
+| `city` | string | Optional. Case-insensitive partial match on the facility city. Max 100 characters. |
+| `in_stock` | boolean | Optional. `true` keeps only in-stock rows, `false` only out-of-stock rows. |
+| `limit` | integer | Optional. Defaults to 50. Range 1-100. |
+
+### Response `200 OK`
+
+```json
+{
+  "medicines": [
+    {
+      "id": 1,
+      "medicine_name": "Paracetamol 500mg",
+      "category": "Pain and fever",
+      "in_stock": true,
+      "quantity": 120,
+      "unit": "strips",
+      "price": 20.0,
+      "facility_id": 4,
+      "facility_name": "Seva Pharmacy",
+      "facility_type": "Pharmacy",
+      "city": "Rampur",
+      "state": "Uttar Pradesh",
+      "phone": "+91-98765-43212",
+      "distance_km": 1.6,
+      "updated_at": "2026-10-23T10:00:00"
     }
   ],
   "count": 1

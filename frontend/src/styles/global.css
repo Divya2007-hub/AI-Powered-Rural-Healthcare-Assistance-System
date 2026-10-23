@@ -1102,3 +1102,44 @@ main {
     flex: 1 1 0;
   }
 }
+
+/* ---------- Medicine availability ---------- */
+
+.stock-badge {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stock-badge.is-in {
+  background: var(--mint-100);
+  color: var(--green-900);
+}
+
+.stock-badge.is-out {
+  background: #fdecea;
+  color: #8a1c14;
+}
+
+.medicine-category {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.medicine-quantity {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.medicine-price {
+  font-weight: 700;
+  color: var(--green-900);
+}

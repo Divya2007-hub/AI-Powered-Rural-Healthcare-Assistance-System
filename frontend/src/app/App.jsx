@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import NearbyHealthcare from '../features/facilities/NearbyHealthcare.jsx'
+import MedicineAvailability from '../features/medicine/MedicineAvailability.jsx'
 import SymptomCheck from '../features/triage/SymptomCheck.jsx'
 
 /*
@@ -63,6 +64,12 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const openMedicine = () => {
+    setMessage('')
+    setView('medicine')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const goHome = () => {
     setMessage('')
     setView('home')
@@ -101,7 +108,8 @@ function App() {
                 const isActive =
                   (item.id === 'home' && view === 'home') ||
                   (item.id === 'symptoms' && view === 'symptoms') ||
-                  (item.id === 'nearby' && view === 'nearby')
+                  (item.id === 'nearby' && view === 'nearby') ||
+                  (item.id === 'medicine' && view === 'medicine')
 
                 const onClick =
                   item.id === 'home'
@@ -110,7 +118,9 @@ function App() {
                       ? openSymptoms
                       : item.id === 'nearby'
                         ? openNearby
-                        : () => comingSoon(item.label)
+                        : item.id === 'medicine'
+                          ? openMedicine
+                          : () => comingSoon(item.label)
 
                 return (
                   <li key={item.id}>
@@ -149,6 +159,8 @@ function App() {
           <SymptomCheck language={language} onBack={goHome} />
         ) : view === 'nearby' ? (
           <NearbyHealthcare onBack={goHome} />
+        ) : view === 'medicine' ? (
+          <MedicineAvailability onBack={goHome} />
         ) : (
           <>
         <section className="hero" aria-labelledby="hero-title">
@@ -171,6 +183,7 @@ function App() {
                     onClick={() => {
                       if (id === 'symptoms') openSymptoms()
                       else if (id === 'nearby') openNearby()
+                      else if (id === 'medicine') openMedicine()
                       else comingSoon(title)
                     }}
                   >
