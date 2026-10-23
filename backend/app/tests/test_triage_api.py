@@ -40,6 +40,31 @@ def test_common_symptom_returns_consultation() -> None:
     assert body["emergency"] is False
 
 
+def test_triage_supports_hindi_guidance() -> None:
+    response = make_client().post(
+        "/api/v1/triage/symptoms",
+        json={"symptoms": ["fever", "cough"], "language": "hi"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["urgency_code"] == "consult"
+    assert body["urgency"] != "Medical Consultation Recommended"
+    assert "परामर्श" in body["urgency"] or "परामर्श" in body["summary"]
+    assert body["disclaimer"]
+
+
+def test_unsupported_language_falls_back_to_english() -> None:
+    response = make_client().post(
+        "/api/v1/triage/symptoms",
+        json={"symptoms": ["fever", "cough"], "language": "fr"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["urgency"] == "Medical Consultation Recommended"
+
+
 def test_empty_symptoms_are_rejected() -> None:
     response = make_client().post("/api/v1/triage/symptoms", json={"symptoms": []})
 

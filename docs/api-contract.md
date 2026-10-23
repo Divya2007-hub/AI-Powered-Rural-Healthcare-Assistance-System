@@ -45,7 +45,7 @@ and never recommends medicine.
 | `symptoms` | array of strings | Required. 1-20 non-empty items, each up to 200 characters. |
 | `duration_days` | integer or null | Optional. 0-365. |
 | `age_years` | integer or null | Optional. 0-120. |
-| `language` | string | Optional. Defaults to `en`. |
+| `language` | string | Optional. One of `en`, `hi`, `kn`, `ta`, `te`, `mr`. Defaults to `en`; unsupported codes fall back to English. |
 
 ### Response `200 OK`
 
@@ -68,7 +68,7 @@ and never recommends medicine.
 
 | Field | Meaning |
 |---|---|
-| `urgency` | One of `Low Urgency`, `Medical Consultation Recommended`, `Urgent Care Required`. |
+| `urgency` | Human-readable label in the requested language. For `en` it is one of `Low Urgency`, `Medical Consultation Recommended`, `Urgent Care Required`. |
 | `urgency_code` | Machine-friendly value: `low`, `consult`, or `urgent`. |
 | `emergency` | `true` when an emergency warning sign was detected. |
 | `red_flags` | Emergency warning signs found in the input. |

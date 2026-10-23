@@ -43,3 +43,8 @@ FALLBACK_SUMMARY = (
     "We could not fully review your symptoms right now. A medical consultation is "
     "recommended so a professional can assess you safely."
 )
+
+UNKNOWN_SUMMARY = (
+    "There is not enough information to judge how serious these symptoms are. "
+    "A medical consultation is recommended."
+)

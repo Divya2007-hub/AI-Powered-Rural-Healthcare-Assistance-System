@@ -6,6 +6,7 @@ from triage_engine.advice import (
     EMERGENCY_SUMMARY,
     LOW_ADVICE,
     LOW_SUMMARY,
+    UNKNOWN_SUMMARY,
     URGENT_ADVICE,
 )
 from triage_engine.models import SymptomRequest, TriageAssessment, Urgency
@@ -126,9 +127,6 @@ class RuleBasedTriageProvider(TriageProvider):
 
         return TriageAssessment(
             urgency=Urgency.CONSULT,
-            summary=(
-                "There is not enough information to judge how serious these symptoms are. "
-                "A medical consultation is recommended."
-            ),
+            summary=UNKNOWN_SUMMARY,
             advice=CONSULT_ADVICE,
         )

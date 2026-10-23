@@ -1,13 +1,24 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { searchMedicineAvailability } from '../../api/medicines.js'
-
-const inr = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' })
+import { useI18n } from '../../i18n/I18nProvider.jsx'
+import { localeFor } from '../../i18n/languages.js'
 
 function phoneHref(phone) {
   return `tel:${phone.replace(/[^\d+]/g, '')}`
 }
 
+function facilityTypeLabel(type, t) {
+  const key = `facilityType.${type}`
+  const translated = t(key)
+  return translated === key ? type : translated
+}
+
 export default function MedicineAvailability({ onBack }) {
+  const { language, t } = useI18n()
+  const inr = useMemo(
+    () => new Intl.NumberFormat(localeFor(language), { style: 'currency', currency: 'INR' }),
+    [language],
+  )
   const [medicine, setMedicine] = useState('')
   const [city, setCity] = useState('')
   const [inStock, setInStock] = useState(true)
@@ -30,10 +41,7 @@ export default function MedicineAvailability({ onBack }) {
       setStatus('idle')
     } catch (err) {
       if (err.name === 'AbortError') return
-      setError(
-        err.message ||
-          'We could not load medicine availability. Check your connection and try again.',
-      )
+      setError(err.message || t('medicine.error'))
       setMedicines([])
       setStatus('error')
     }
@@ -60,35 +68,32 @@ export default function MedicineAvailability({ onBack }) {
     <section className="facilities" aria-labelledby="medicine-title">
       <div className="triage-intro">
         <button type="button" className="btn btn-outline btn-back" onClick={onBack}>
-          &larr; Back to home
+          {t('common.backHome')}
         </button>
-        <h1 id="medicine-title">Medicine Availability</h1>
-        <p className="triage-lead">
-          Check which nearby pharmacies and health centres currently have a medicine in stock.
-          Availability is informational only. SevaCare does not prescribe medicines or give dosages.
-        </p>
+        <h1 id="medicine-title">{t('medicine.title')}</h1>
+        <p className="triage-lead">{t('medicine.lead')}</p>
       </div>
 
       <form className="facilities-filters" onSubmit={handleSubmit}>
         <div className="field">
-          <label htmlFor="medicine-name">Medicine name</label>
+          <label htmlFor="medicine-name">{t('medicine.nameLabel')}</label>
           <input
             id="medicine-name"
             name="medicine"
             type="search"
-            placeholder="e.g. Paracetamol"
+            placeholder={t('medicine.namePlaceholder')}
             value={medicine}
             onChange={(event) => setMedicine(event.target.value)}
           />
         </div>
 
         <div className="field">
-          <label htmlFor="medicine-city">Village, town or city</label>
+          <label htmlFor="medicine-city">{t('nearby.cityLabel')}</label>
           <input
             id="medicine-city"
             name="city"
             type="search"
-            placeholder="e.g. Rampur"
+            placeholder={t('nearby.cityPlaceholder')}
             value={city}
             onChange={(event) => setCity(event.target.value)}
           />
@@ -102,15 +107,15 @@ export default function MedicineAvailability({ onBack }) {
             checked={inStock}
             onChange={(event) => setInStock(event.target.checked)}
           />
-          <label htmlFor="medicine-in-stock">Show only in-stock medicines</label>
+          <label htmlFor="medicine-in-stock">{t('medicine.inStockOnly')}</label>
         </div>
 
         <div className="facilities-filter-actions">
           <button type="submit" className="btn btn-primary">
-            Search
+            {t('common.search')}
           </button>
           <button type="button" className="btn btn-outline" onClick={clearFilters}>
-            Clear
+            {t('common.clear')}
           </button>
         </div>
       </form>
@@ -118,7 +123,7 @@ export default function MedicineAvailability({ onBack }) {
       <div className="facilities-results" aria-live="polite">
         {status === 'loading' && (
           <p className="facilities-status" role="status">
-            Loading medicine availability…
+            {t('medicine.loading')}
           </p>
         )}
 
@@ -130,15 +135,17 @@ export default function MedicineAvailability({ onBack }) {
 
         {status === 'idle' && medicines.length === 0 && (
           <div className="result-placeholder">
-            <h2>No medicine availability found</h2>
-            <p>Try another medicine name or place, or clear the filters.</p>
+            <h2>{t('medicine.emptyTitle')}</h2>
+            <p>{t('medicine.emptyBody')}</p>
           </div>
         )}
 
         {status === 'idle' && medicines.length > 0 && (
           <>
             <p className="facilities-count">
-              Showing {medicines.length} {medicines.length === 1 ? 'result' : 'results'}
+              {medicines.length === 1
+                ? t('medicine.showingOne')
+                : t('medicine.showingMany', { count: medicines.length })}
             </p>
             <ul className="facility-list">
               {medicines.map((item) => (
@@ -146,7 +153,7 @@ export default function MedicineAvailability({ onBack }) {
                   <div className="facility-head">
                     <h2>{item.medicine_name}</h2>
                     <span className={`stock-badge ${item.in_stock ? 'is-in' : 'is-out'}`}>
-                      {item.in_stock ? 'In stock' : 'Out of stock'}
+                      {item.in_stock ? t('common.inStock') : t('common.outOfStock')}
                     </span>
                   </div>
 
@@ -155,7 +162,7 @@ export default function MedicineAvailability({ onBack }) {
                   <div className="facility-meta">
                     {item.quantity !== null && item.unit && (
                       <span className="medicine-quantity">
-                        {item.quantity} {item.unit} available
+                        {t('medicine.available', { quantity: item.quantity, unit: item.unit })}
                       </span>
                     )}
                     {item.price !== null && (
@@ -169,16 +176,18 @@ export default function MedicineAvailability({ onBack }) {
 
                   <div className="facility-meta">
                     {item.distance_km !== null && (
-                      <span className="facility-distance">{item.distance_km} km away</span>
+                      <span className="facility-distance">
+                        {t('common.kmAway', { distance: item.distance_km })}
+                      </span>
                     )}
                     <span className={`facility-type type-${item.facility_type.toLowerCase()}`}>
-                      {item.facility_type}
+                      {facilityTypeLabel(item.facility_type, t)}
                     </span>
                   </div>
 
                   {item.phone && (
                     <a className="facility-phone" href={phoneHref(item.phone)}>
-                      Call {item.phone}
+                      {t('common.call', { phone: item.phone })}
                     </a>
                   )}
                 </li>
@@ -188,10 +197,7 @@ export default function MedicineAvailability({ onBack }) {
         )}
       </div>
 
-      <p className="safety-note">
-        Availability and prices are demo data for development. Ask a doctor or pharmacist before
-        taking any medicine. In an emergency, call your local emergency number.
-      </p>
+      <p className="safety-note">{t('medicine.safety')}</p>
     </section>
   )
 }

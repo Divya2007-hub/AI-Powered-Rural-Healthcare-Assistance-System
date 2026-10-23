@@ -7,7 +7,7 @@ import MedicineAvailability from '../features/medicine/MedicineAvailability.jsx'
 import PharmacyPortal from '../features/pharmacist/PharmacyPortal.jsx'
 import Profile from '../features/profile/Profile.jsx'
 import SymptomCheck from '../features/triage/SymptomCheck.jsx'
-import { LANGUAGES } from '../i18n/languages.js'
+import { useI18n } from '../i18n/I18nProvider.jsx'
 
 /*
  * SevaCare home page.
@@ -19,22 +19,22 @@ import { LANGUAGES } from '../i18n/languages.js'
 const HERO_IMAGE_SRC = '/images/sevacare-hero.jpg'
 
 const NAV_ITEMS = [
-  { id: 'home', label: 'Home' },
-  { id: 'symptoms', label: 'Check Symptoms' },
-  { id: 'nearby', label: 'Nearby Healthcare' },
-  { id: 'medicine', label: 'Medicine' },
-  { id: 'login', label: 'Login' },
+  { id: 'home', labelKey: 'nav.home' },
+  { id: 'symptoms', labelKey: 'nav.symptoms' },
+  { id: 'nearby', labelKey: 'nav.nearby' },
+  { id: 'medicine', labelKey: 'nav.medicine' },
+  { id: 'login', labelKey: 'nav.login' },
 ]
 
 const FEATURES = [
-  { id: 'symptoms', title: 'Symptom Check', note: '', Icon: SymptomIcon },
-  { id: 'nearby', title: 'Nearby Healthcare', note: '', Icon: LocationIcon },
-  { id: 'medicine', title: 'Medicine Availability', note: '', Icon: MedicineIcon },
-  { id: 'sms', title: 'SMS Support', note: '(Low Connectivity)', Icon: SmsIcon },
+  { id: 'symptoms', titleKey: 'feature.symptoms', noteKey: '', Icon: SymptomIcon },
+  { id: 'nearby', titleKey: 'feature.nearby', noteKey: '', Icon: LocationIcon },
+  { id: 'medicine', titleKey: 'feature.medicine', noteKey: '', Icon: MedicineIcon },
+  { id: 'sms', titleKey: 'feature.sms', noteKey: 'feature.smsNote', Icon: SmsIcon },
 ]
 
 function App() {
-  const [language, setLanguage] = useState('en')
+  const { language, setLanguage, languages, t } = useI18n()
   const [view, setView] = useState('home')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState('')
@@ -66,9 +66,9 @@ function App() {
     return () => {
       active = false
     }
-  }, [])
+  }, [setLanguage])
 
-  const comingSoon = (label) => setMessage(`${label} is coming soon. This page is not built yet.`)
+  const comingSoon = (label) => setMessage(t('home.comingSoon', { label }))
 
   const openSymptoms = () => {
     setMessage('')
@@ -135,10 +135,8 @@ function App() {
 
   const chooseLanguage = (code) => {
     setLanguage(code)
-    if (code !== 'en') {
-      const chosen = LANGUAGES.find((l) => l.code === code)
-      setMessage(`${chosen.name} selected. Translated pages are coming soon; the app is shown in English for now.`)
-    }
+    const chosen = languages.find((item) => item.code === code)
+    setMessage(t('home.languageChanged', { name: chosen?.name ?? code }))
   }
 
   const getStarted = () => {
@@ -149,25 +147,25 @@ function App() {
   const navItems =
     user?.role === 'pharmacist'
       ? NAV_ITEMS.flatMap((item) =>
-          item.id === 'login' ? [{ id: 'pharmacy', label: 'Pharmacy' }, item] : [item],
+          item.id === 'login' ? [{ id: 'pharmacy', labelKey: 'nav.pharmacy' }, item] : [item],
         )
       : NAV_ITEMS
 
   return (
     <div className="page">
-      <a className="skip-link" href="#main">Skip to main content</a>
+      <a className="skip-link" href="#main">{t('nav.skip')}</a>
 
       <header className="site-header">
         <div className="header-inner">
-          <a className="brand" href="/" aria-label="SevaCare home">
+          <a className="brand" href="/" aria-label={t('a11y.brandHome')}>
             <LogoMark />
             <span className="brand-text">
               <span className="brand-name">SevaCare</span>
-              <span className="brand-tagline">Health for Every Home</span>
+              <span className="brand-tagline">{t('brand.tagline')}</span>
             </span>
           </a>
 
-          <nav className="main-nav" aria-label="Main navigation">
+          <nav className="main-nav" aria-label={t('a11y.mainNav')}>
             <ul>
               {navItems.map((item) => {
                 const isLoginItem = item.id === 'login'
@@ -194,9 +192,9 @@ function App() {
                               ? user
                                 ? openProfile
                                 : openAuth
-                              : () => comingSoon(item.label)
+                              : () => comingSoon(t(item.labelKey))
 
-                const label = isLoginItem && user ? 'Profile' : item.label
+                const label = isLoginItem && user ? t('nav.profile') : t(item.labelKey)
 
                 return (
                   <li key={item.id}>
@@ -215,14 +213,14 @@ function App() {
           </nav>
 
           <div className="lang-select-wrap">
-            <label className="visually-hidden" htmlFor="header-language">Language</label>
+            <label className="visually-hidden" htmlFor="header-language">{t('nav.language')}</label>
             <select
               id="header-language"
               className="lang-select"
               value={language}
               onChange={(e) => chooseLanguage(e.target.value)}
             >
-              {LANGUAGES.map((l) => (
+              {languages.map((l) => (
                 <option key={l.code} value={l.code}>{l.name}</option>
               ))}
             </select>
@@ -232,7 +230,7 @@ function App() {
 
       <main id="main">
         {view === 'symptoms' ? (
-          <SymptomCheck language={language} isAuthenticated={Boolean(user)} onBack={goHome} />
+          <SymptomCheck isAuthenticated={Boolean(user)} onBack={goHome} />
         ) : view === 'nearby' ? (
           <NearbyHealthcare onBack={goHome} />
         ) : view === 'medicine' ? (
@@ -253,16 +251,14 @@ function App() {
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-copy">
             <h1 id="hero-title">
-              Your Health
+              {t('hero.title1')}
               <br />
-              Our Priority
+              {t('hero.title2')}
             </h1>
-            <p className="hero-lead">
-              Get quick health guidance, find nearby hospitals, clinics, doctors and pharmacies — even in remote areas.
-            </p>
+            <p className="hero-lead">{t('hero.lead')}</p>
 
-            <ul className="features" aria-label="What you can do">
-              {FEATURES.map(({ id, title, note, Icon }) => (
+            <ul className="features" aria-label={t('a11y.features')}>
+              {FEATURES.map(({ id, titleKey, noteKey, Icon }) => (
                 <li key={id}>
                   <button
                     type="button"
@@ -271,12 +267,12 @@ function App() {
                       if (id === 'symptoms') openSymptoms()
                       else if (id === 'nearby') openNearby()
                       else if (id === 'medicine') openMedicine()
-                      else comingSoon(title)
+                      else comingSoon(t(titleKey))
                     }}
                   >
                     <span className="feature-icon" aria-hidden="true"><Icon /></span>
-                    <span className="feature-title">{title}</span>
-                    {note && <span className="feature-note">{note}</span>}
+                    <span className="feature-title">{t(titleKey)}</span>
+                    {noteKey && <span className="feature-note">{t(noteKey)}</span>}
                   </button>
                 </li>
               ))}
@@ -284,18 +280,19 @@ function App() {
 
             <div className="hero-actions">
               <button type="button" className="btn btn-primary" onClick={getStarted}>
-                Get Started
+                {t('hero.getStarted')}
               </button>
-              <button type="button" className="btn btn-outline" onClick={() => comingSoon('The video')}>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => comingSoon(t('hero.watchVideo'))}
+              >
                 <PlayIcon />
-                Watch Video
+                {t('hero.watchVideo')}
               </button>
             </div>
 
-            <p className="safety-note">
-              SevaCare gives general health information only. It does not diagnose illness or prescribe medicine.
-              In an emergency, contact a doctor or your local emergency number.
-            </p>
+            <p className="safety-note">{t('hero.safety')}</p>
           </div>
 
           <div className="hero-visual">
@@ -303,26 +300,26 @@ function App() {
               <img
                 className="hero-photo"
                 src={HERO_IMAGE_SRC}
-                alt="A woman in a village smiling as she uses a health guidance app on her phone"
+                alt={t('a11y.heroPhoto')}
                 onError={() => setHeroFailed(true)}
               />
             ) : (
               <HeroIllustration />
             )}
             <p className="hero-quote">
-              Better
+              {t('hero.quote1')}
               <br />
-              Healthcare
+              {t('hero.quote2')}
               <br />
-              for a Healthier
+              {t('hero.quote3')}
               <br />
-              Tomorrow
+              {t('hero.quote4')}
             </p>
           </div>
         </section>
 
         <section className="language-card" aria-labelledby="language-title">
-          <h2 id="language-title">Choose Your Language</h2>
+          <h2 id="language-title">{t('home.languageTitle')}</h2>
           <div
             className="language-options"
             role="group"
@@ -330,7 +327,7 @@ function App() {
             tabIndex={-1}
             ref={languageRef}
           >
-            {LANGUAGES.map((l) => (
+            {languages.map((l) => (
               <button
                 key={l.code}
                 type="button"
@@ -419,12 +416,14 @@ function PlayIcon() {
 
 /* Built-in fallback visual shown until a real hero photo is added. */
 function HeroIllustration() {
+  const { t } = useI18n()
+
   return (
     <svg
       className="hero-photo hero-illustration"
       viewBox="0 0 600 520"
       role="img"
-      aria-label="Illustration of a village with fields and a house under a bright sky, and a phone showing a health cross"
+      aria-label={t('a11y.heroIllustration')}
       preserveAspectRatio="xMidYMax slice"
     >
       <defs>

@@ -5,6 +5,7 @@ import {
   listPharmacyStock,
   updatePharmacyStock,
 } from '../../api/pharmacist.js'
+import { useI18n } from '../../i18n/I18nProvider.jsx'
 
 function toNumberOrNull(value) {
   if (value === '' || value === null || value === undefined) return null
@@ -13,6 +14,7 @@ function toNumberOrNull(value) {
 }
 
 function StockRow({ item, onSaved, onDeleted, onError }) {
+  const { t } = useI18n()
   const [inStock, setInStock] = useState(item.in_stock)
   const [quantity, setQuantity] = useState(item.quantity ?? '')
   const [unit, setUnit] = useState(item.unit ?? '')
@@ -31,19 +33,19 @@ function StockRow({ item, onSaved, onDeleted, onError }) {
       })
       onSaved(updated)
     } catch (err) {
-      onError(err.message || 'We could not update this medicine.')
+      onError(err.message || t('pharmacy.updateError'))
     } finally {
       setSaving(false)
     }
   }
 
   const remove = async () => {
-    if (!window.confirm(`Remove ${item.medicine_name} from your stock?`)) return
+    if (!window.confirm(t('pharmacy.confirmRemove', { name: item.medicine_name }))) return
     try {
       await deletePharmacyStock(item.id)
       onDeleted(item.id)
     } catch (err) {
-      onError(err.message || 'We could not remove this medicine.')
+      onError(err.message || t('pharmacy.removeError'))
     }
   }
 
@@ -62,14 +64,14 @@ function StockRow({ item, onSaved, onDeleted, onError }) {
               onChange={(event) => setInStock(event.target.checked)}
             />
             <span className={`stock-badge ${inStock ? 'is-in' : 'is-out'}`}>
-              {inStock ? 'In stock' : 'Out of stock'}
+              {inStock ? t('common.inStock') : t('common.outOfStock')}
             </span>
           </label>
         </div>
 
         <div className="stock-fields">
           <div className="field">
-            <label htmlFor={`stock-quantity-${item.id}`}>Quantity</label>
+            <label htmlFor={`stock-quantity-${item.id}`}>{t('pharmacy.quantity')}</label>
             <input
               id={`stock-quantity-${item.id}`}
               type="number"
@@ -80,18 +82,18 @@ function StockRow({ item, onSaved, onDeleted, onError }) {
           </div>
 
           <div className="field">
-            <label htmlFor={`stock-unit-${item.id}`}>Unit</label>
+            <label htmlFor={`stock-unit-${item.id}`}>{t('pharmacy.unit')}</label>
             <input
               id={`stock-unit-${item.id}`}
               type="text"
-              placeholder="strips"
+              placeholder={t('pharmacy.unitPlaceholder')}
               value={unit}
               onChange={(event) => setUnit(event.target.value)}
             />
           </div>
 
           <div className="field">
-            <label htmlFor={`stock-price-${item.id}`}>Price (₹)</label>
+            <label htmlFor={`stock-price-${item.id}`}>{t('pharmacy.price')}</label>
             <input
               id={`stock-price-${item.id}`}
               type="number"
@@ -105,10 +107,10 @@ function StockRow({ item, onSaved, onDeleted, onError }) {
 
         <div className="stock-row-actions">
           <button type="submit" className="btn btn-primary" disabled={saving}>
-            {saving ? 'Saving…' : 'Save'}
+            {saving ? t('common.saving') : t('common.save')}
           </button>
           <button type="button" className="btn btn-outline" onClick={remove}>
-            Remove
+            {t('common.remove')}
           </button>
         </div>
       </form>
@@ -117,6 +119,7 @@ function StockRow({ item, onSaved, onDeleted, onError }) {
 }
 
 export default function PharmacyPortal({ onBack }) {
+  const { t } = useI18n()
   const [data, setData] = useState(null)
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
@@ -142,7 +145,7 @@ export default function PharmacyPortal({ onBack }) {
       })
       .catch((err) => {
         if (!active || err.name === 'AbortError') return
-        setError(err.message || 'We could not load your stock.')
+        setError(err.message || t('pharmacy.loadError'))
         setStatus('error')
       })
 
@@ -158,7 +161,7 @@ export default function PharmacyPortal({ onBack }) {
     setMessage('')
 
     if (!name.trim()) {
-      setError('Medicine name is required.')
+      setError(t('pharmacy.requiredName'))
       return
     }
 
@@ -183,9 +186,9 @@ export default function PharmacyPortal({ onBack }) {
       setQuantity('')
       setPrice('')
       setInStock(true)
-      setMessage(`${created.medicine_name} added.`)
+      setMessage(t('pharmacy.added', { name: created.medicine_name }))
     } catch (err) {
-      setError(err.message || 'We could not add this medicine.')
+      setError(err.message || t('pharmacy.addError'))
     } finally {
       setAdding(false)
     }
@@ -197,7 +200,7 @@ export default function PharmacyPortal({ onBack }) {
       medicines: current.medicines.map((item) => (item.id === updated.id ? updated : item)),
     }))
     setError('')
-    setMessage('Stock updated.')
+    setMessage(t('pharmacy.updated'))
   }
 
   const handleDeleted = (stockId) => {
@@ -207,23 +210,23 @@ export default function PharmacyPortal({ onBack }) {
       count: current.count - 1,
     }))
     setError('')
-    setMessage('Medicine removed.')
+    setMessage(t('pharmacy.removed'))
   }
 
   return (
     <section className="pharmacy" aria-labelledby="pharmacy-title">
       <button type="button" className="btn btn-outline btn-back" onClick={onBack}>
-        &larr; Back to home
+        {t('common.backHome')}
       </button>
 
-      <h1 id="pharmacy-title">Pharmacy Portal</h1>
+      <h1 id="pharmacy-title">{t('pharmacy.title')}</h1>
       <p className="triage-lead">
         {data
-          ? `Update the medicine stock for ${data.facility_name}. Changes are visible to patients immediately.`
-          : 'Update the medicine stock for your pharmacy.'}
+          ? t('pharmacy.lead', { facility: data.facility_name })
+          : t('pharmacy.leadGeneric')}
       </p>
 
-      {status === 'loading' && <p className="facilities-status">Loading your stock…</p>}
+      {status === 'loading' && <p className="facilities-status">{t('pharmacy.loading')}</p>}
 
       {status === 'error' && (
         <p className="form-error" role="alert">
@@ -240,32 +243,32 @@ export default function PharmacyPortal({ onBack }) {
       {data && (
         <>
           <form className="add-medicine" onSubmit={addMedicine} noValidate>
-            <h2>Add a medicine</h2>
+            <h2>{t('pharmacy.addTitle')}</h2>
             <div className="add-medicine-grid">
               <div className="field">
-                <label htmlFor="new-medicine-name">Medicine name</label>
+                <label htmlFor="new-medicine-name">{t('pharmacy.name')}</label>
                 <input
                   id="new-medicine-name"
                   type="text"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  placeholder="e.g. Cetirizine 10mg"
+                  placeholder={t('pharmacy.namePlaceholder')}
                 />
               </div>
 
               <div className="field">
-                <label htmlFor="new-medicine-category">Category</label>
+                <label htmlFor="new-medicine-category">{t('pharmacy.category')}</label>
                 <input
                   id="new-medicine-category"
                   type="text"
                   value={category}
                   onChange={(event) => setCategory(event.target.value)}
-                  placeholder="e.g. Allergy"
+                  placeholder={t('pharmacy.categoryPlaceholder')}
                 />
               </div>
 
               <div className="field">
-                <label htmlFor="new-medicine-quantity">Quantity</label>
+                <label htmlFor="new-medicine-quantity">{t('pharmacy.quantity')}</label>
                 <input
                   id="new-medicine-quantity"
                   type="number"
@@ -276,18 +279,18 @@ export default function PharmacyPortal({ onBack }) {
               </div>
 
               <div className="field">
-                <label htmlFor="new-medicine-unit">Unit</label>
+                <label htmlFor="new-medicine-unit">{t('pharmacy.unit')}</label>
                 <input
                   id="new-medicine-unit"
                   type="text"
                   value={unit}
                   onChange={(event) => setUnit(event.target.value)}
-                  placeholder="strips"
+                  placeholder={t('pharmacy.unitPlaceholder')}
                 />
               </div>
 
               <div className="field">
-                <label htmlFor="new-medicine-price">Price (₹)</label>
+                <label htmlFor="new-medicine-price">{t('pharmacy.price')}</label>
                 <input
                   id="new-medicine-price"
                   type="number"
@@ -305,7 +308,7 @@ export default function PharmacyPortal({ onBack }) {
                   checked={inStock}
                   onChange={(event) => setInStock(event.target.checked)}
                 />
-                <label htmlFor="new-medicine-in-stock">In stock</label>
+                <label htmlFor="new-medicine-in-stock">{t('common.inStock')}</label>
               </div>
             </div>
 
@@ -316,17 +319,17 @@ export default function PharmacyPortal({ onBack }) {
             )}
 
             <button type="submit" className="btn btn-primary" disabled={adding}>
-              {adding ? 'Adding…' : 'Add medicine'}
+              {adding ? t('pharmacy.adding') : t('pharmacy.add')}
             </button>
           </form>
 
           <div className="stock-section" aria-live="polite">
-            <h2>Current stock ({data.count})</h2>
+            <h2>{t('pharmacy.stockTitle', { count: data.count })}</h2>
 
             {data.medicines.length === 0 ? (
               <div className="result-placeholder">
-                <h2>No medicines yet</h2>
-                <p>Add your first medicine using the form above.</p>
+                <h2>{t('pharmacy.emptyTitle')}</h2>
+                <p>{t('pharmacy.emptyBody')}</p>
               </div>
             ) : (
               <ul className="stock-list">
@@ -346,10 +349,7 @@ export default function PharmacyPortal({ onBack }) {
         </>
       )}
 
-      <p className="safety-note">
-        Update stock honestly. SevaCare does not prescribe medicines; patients should always
-        consult a doctor or pharmacist.
-      </p>
+      <p className="safety-note">{t('pharmacy.safety')}</p>
     </section>
   )
 }

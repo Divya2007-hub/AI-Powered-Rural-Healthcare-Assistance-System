@@ -1,19 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import { listNearbyFacilities } from '../../api/facilities.js'
+import { useI18n } from '../../i18n/I18nProvider.jsx'
 
 const FACILITY_TYPES = [
-  { value: '', label: 'All facility types' },
-  { value: 'PHC', label: 'Primary Health Centre (PHC)' },
-  { value: 'CHC', label: 'Community Health Centre (CHC)' },
-  { value: 'Hospital', label: 'Hospital' },
-  { value: 'Pharmacy', label: 'Pharmacy' },
+  { value: '', labelKey: 'nearby.allTypes' },
+  { value: 'PHC', labelKey: 'facilityType.PHC' },
+  { value: 'CHC', labelKey: 'facilityType.CHC' },
+  { value: 'Hospital', labelKey: 'facilityType.Hospital' },
+  { value: 'Pharmacy', labelKey: 'facilityType.Pharmacy' },
 ]
+
+function facilityTypeLabel(type, t) {
+  const key = `facilityType.${type}`
+  const translated = t(key)
+  return translated === key ? type : translated
+}
 
 function phoneHref(phone) {
   return `tel:${phone.replace(/[^\d+]/g, '')}`
 }
 
 export default function NearbyHealthcare({ onBack }) {
+  const { t } = useI18n()
   const [city, setCity] = useState('')
   const [type, setType] = useState('')
   const [emergencyOnly, setEmergencyOnly] = useState(false)
@@ -36,10 +44,7 @@ export default function NearbyHealthcare({ onBack }) {
       setStatus('idle')
     } catch (err) {
       if (err.name === 'AbortError') return
-      setError(
-        err.message ||
-          'We could not load nearby healthcare facilities. Check your connection and try again.',
-      )
+      setError(err.message || t('nearby.error'))
       setFacilities([])
       setStatus('error')
     }
@@ -66,30 +71,27 @@ export default function NearbyHealthcare({ onBack }) {
     <section className="facilities" aria-labelledby="facilities-title">
       <div className="triage-intro">
         <button type="button" className="btn btn-outline btn-back" onClick={onBack}>
-          &larr; Back to home
+          {t('common.backHome')}
         </button>
-        <h1 id="facilities-title">Nearby Healthcare</h1>
-        <p className="triage-lead">
-          Find primary health centres, community health centres, hospitals and pharmacies near you.
-          Call ahead to confirm timings and services.
-        </p>
+        <h1 id="facilities-title">{t('nearby.title')}</h1>
+        <p className="triage-lead">{t('nearby.lead')}</p>
       </div>
 
       <form className="facilities-filters" onSubmit={handleSubmit}>
         <div className="field">
-          <label htmlFor="facility-city">Village, town or city</label>
+          <label htmlFor="facility-city">{t('nearby.cityLabel')}</label>
           <input
             id="facility-city"
             name="city"
             type="search"
-            placeholder="e.g. Rampur"
+            placeholder={t('nearby.cityPlaceholder')}
             value={city}
             onChange={(event) => setCity(event.target.value)}
           />
         </div>
 
         <div className="field">
-          <label htmlFor="facility-type">Facility type</label>
+          <label htmlFor="facility-type">{t('nearby.typeLabel')}</label>
           <select
             id="facility-type"
             name="type"
@@ -98,7 +100,7 @@ export default function NearbyHealthcare({ onBack }) {
           >
             {FACILITY_TYPES.map((option) => (
               <option key={option.value} value={option.value}>
-                {option.label}
+                {t(option.labelKey)}
               </option>
             ))}
           </select>
@@ -112,15 +114,15 @@ export default function NearbyHealthcare({ onBack }) {
             checked={emergencyOnly}
             onChange={(event) => setEmergencyOnly(event.target.checked)}
           />
-          <label htmlFor="facility-emergency">Emergency services or 24x7 only</label>
+          <label htmlFor="facility-emergency">{t('nearby.emergencyOnly')}</label>
         </div>
 
         <div className="facilities-filter-actions">
           <button type="submit" className="btn btn-primary">
-            Search
+            {t('common.search')}
           </button>
           <button type="button" className="btn btn-outline" onClick={clearFilters}>
-            Clear
+            {t('common.clear')}
           </button>
         </div>
       </form>
@@ -128,7 +130,7 @@ export default function NearbyHealthcare({ onBack }) {
       <div className="facilities-results" aria-live="polite">
         {status === 'loading' && (
           <p className="facilities-status" role="status">
-            Loading healthcare facilities…
+            {t('nearby.loading')}
           </p>
         )}
 
@@ -140,15 +142,17 @@ export default function NearbyHealthcare({ onBack }) {
 
         {status === 'idle' && facilities.length === 0 && (
           <div className="result-placeholder">
-            <h2>No facilities found</h2>
-            <p>Try a different village, town or city, or clear the filters.</p>
+            <h2>{t('nearby.emptyTitle')}</h2>
+            <p>{t('nearby.emptyBody')}</p>
           </div>
         )}
 
         {status === 'idle' && facilities.length > 0 && (
           <>
             <p className="facilities-count">
-              Showing {facilities.length} {facilities.length === 1 ? 'facility' : 'facilities'}
+              {facilities.length === 1
+                ? t('nearby.showingOne')
+                : t('nearby.showingMany', { count: facilities.length })}
             </p>
             <ul className="facility-list">
               {facilities.map((facility) => (
@@ -156,7 +160,7 @@ export default function NearbyHealthcare({ onBack }) {
                   <div className="facility-head">
                     <h2>{facility.name}</h2>
                     <span className={`facility-type type-${facility.type.toLowerCase()}`}>
-                      {facility.type}
+                      {facilityTypeLabel(facility.type, t)}
                     </span>
                   </div>
 
@@ -166,17 +170,23 @@ export default function NearbyHealthcare({ onBack }) {
 
                   <div className="facility-meta">
                     {facility.distance_km !== null && (
-                      <span className="facility-distance">{facility.distance_km} km away</span>
+                      <span className="facility-distance">
+                        {t('common.kmAway', { distance: facility.distance_km })}
+                      </span>
                     )}
-                    {facility.open_24x7 && <span className="facility-badge">Open 24x7</span>}
+                    {facility.open_24x7 && (
+                      <span className="facility-badge">{t('nearby.open24')}</span>
+                    )}
                     {facility.emergency_services && (
-                      <span className="facility-badge is-emergency">Emergency services</span>
+                      <span className="facility-badge is-emergency">
+                        {t('nearby.emergencyBadge')}
+                      </span>
                     )}
                   </div>
 
                   {facility.phone && (
                     <a className="facility-phone" href={phoneHref(facility.phone)}>
-                      Call {facility.phone}
+                      {t('common.call', { phone: facility.phone })}
                     </a>
                   )}
                 </li>
@@ -186,9 +196,7 @@ export default function NearbyHealthcare({ onBack }) {
         )}
       </div>
 
-      <p className="safety-note">
-        Listings are demo data for development. In an emergency, call your local emergency number.
-      </p>
+      <p className="safety-note">{t('nearby.safety')}</p>
     </section>
   )
 }

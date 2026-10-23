@@ -83,3 +83,22 @@ def test_disclaimer_is_always_attached() -> None:
     result = TriageEngine().assess(make_request())
 
     assert result.disclaimer == DISCLAIMER
+
+
+def test_result_is_localized_without_changing_urgency() -> None:
+    result = TriageEngine().assess(
+        make_request(symptoms=("chest pain",), language="hi")
+    )
+
+    assert result.urgency is Urgency.URGENT
+    assert result.urgency_code == "urgent"
+    assert result.emergency is True
+    assert result.disclaimer != DISCLAIMER
+    assert "छाती में दर्द या दबाव" in result.red_flags
+    assert any("चिकित्सा" in line for line in result.advice)
+
+
+def test_unsupported_language_falls_back_to_english() -> None:
+    result = TriageEngine().assess(make_request(language="fr"))
+
+    assert result.disclaimer == DISCLAIMER

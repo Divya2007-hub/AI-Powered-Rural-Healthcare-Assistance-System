@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { login, register } from '../../api/auth.js'
-import { LANGUAGES } from '../../i18n/languages.js'
+import { useI18n } from '../../i18n/I18nProvider.jsx'
 
 export default function AuthScreen({ onAuthenticated, onBack }) {
+  const { language: currentLanguage, languages, t } = useI18n()
   const [mode, setMode] = useState('login')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [language, setLanguage] = useState('en')
+  const [language, setLanguage] = useState(currentLanguage)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
@@ -24,7 +25,7 @@ export default function AuthScreen({ onAuthenticated, onBack }) {
         : await login({ email, password })
       onAuthenticated(data.user)
     } catch (err) {
-      setError(err.message || 'We could not sign you in. Please try again.')
+      setError(err.message || t('auth.error'))
     } finally {
       setSubmitting(false)
     }
@@ -39,20 +40,18 @@ export default function AuthScreen({ onAuthenticated, onBack }) {
     <section className="auth" aria-labelledby="auth-title">
       <div className="auth-card">
         <button type="button" className="btn btn-outline btn-back" onClick={onBack}>
-          &larr; Back to home
+          {t('common.backHome')}
         </button>
 
-        <h1 id="auth-title">{isRegister ? 'Create your account' : 'Welcome back'}</h1>
+        <h1 id="auth-title">{isRegister ? t('auth.createTitle') : t('auth.loginTitle')}</h1>
         <p className="triage-lead">
-          {isRegister
-            ? 'Save your symptom checks and keep your health history in one place.'
-            : 'Log in to see your profile and past symptom checks.'}
+          {isRegister ? t('auth.createLead') : t('auth.loginLead')}
         </p>
 
         <form onSubmit={submit} noValidate>
           {isRegister && (
             <div className="field">
-              <label htmlFor="auth-name">Full name</label>
+              <label htmlFor="auth-name">{t('auth.name')}</label>
               <input
                 id="auth-name"
                 name="name"
@@ -66,7 +65,7 @@ export default function AuthScreen({ onAuthenticated, onBack }) {
           )}
 
           <div className="field">
-            <label htmlFor="auth-email">Email</label>
+            <label htmlFor="auth-email">{t('auth.email')}</label>
             <input
               id="auth-email"
               name="email"
@@ -79,7 +78,7 @@ export default function AuthScreen({ onAuthenticated, onBack }) {
           </div>
 
           <div className="field">
-            <label htmlFor="auth-password">Password</label>
+            <label htmlFor="auth-password">{t('auth.password')}</label>
             <input
               id="auth-password"
               name="password"
@@ -90,19 +89,19 @@ export default function AuthScreen({ onAuthenticated, onBack }) {
               minLength={isRegister ? 8 : 1}
               required
             />
-            {isRegister && <p className="field-hint">Use at least 8 characters.</p>}
+            {isRegister && <p className="field-hint">{t('auth.passwordHint')}</p>}
           </div>
 
           {isRegister && (
             <div className="field">
-              <label htmlFor="auth-language">Preferred language</label>
+              <label htmlFor="auth-language">{t('auth.language')}</label>
               <select
                 id="auth-language"
                 name="language"
                 value={language}
                 onChange={(event) => setLanguage(event.target.value)}
               >
-                {LANGUAGES.map((option) => (
+                {languages.map((option) => (
                   <option key={option.code} value={option.code}>
                     {option.name}
                   </option>
@@ -118,20 +117,22 @@ export default function AuthScreen({ onAuthenticated, onBack }) {
           )}
 
           <button type="submit" className="btn btn-primary auth-submit" disabled={submitting}>
-            {submitting ? 'Please wait…' : isRegister ? 'Create account' : 'Log in'}
+            {submitting
+              ? t('auth.wait')
+              : isRegister
+                ? t('auth.createAccount')
+                : t('auth.login')}
           </button>
         </form>
 
         <p className="auth-switch">
-          {isRegister ? 'Already have an account?' : 'New to SevaCare?'}{' '}
+          {isRegister ? t('auth.haveAccount') : t('auth.newUser')}{' '}
           <button type="button" className="link-button" onClick={switchMode}>
-            {isRegister ? 'Log in' : 'Create one'}
+            {isRegister ? t('auth.login') : t('auth.createOne')}
           </button>
         </p>
 
-        <p className="safety-note">
-          Your account keeps your symptom history private to you. SevaCare never sells your data.
-        </p>
+        <p className="safety-note">{t('auth.safety')}</p>
       </div>
     </section>
   )

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { assessSymptoms } from '../../api/triage.js'
+import { useI18n } from '../../i18n/I18nProvider.jsx'
 
 const URGENCY_META = {
   low: { className: 'is-low', label: 'Low urgency' },
@@ -22,7 +23,8 @@ function parseOptionalNumber(value) {
   return Number.isFinite(parsed) ? parsed : null
 }
 
-export default function SymptomCheck({ language, isAuthenticated = false, onBack }) {
+export default function SymptomCheck({ isAuthenticated = false, onBack }) {
+  const { language, t } = useI18n()
   const [symptomsText, setSymptomsText] = useState('')
   const [age, setAge] = useState('')
   const [duration, setDuration] = useState('')
@@ -44,19 +46,19 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
 
     const symptoms = parseSymptoms(symptomsText)
     if (symptoms.length === 0) {
-      setError('Please enter at least one symptom.')
+      setError(t('symptoms.errorEmpty'))
       return
     }
 
     const ageYears = parseOptionalNumber(age)
     if (ageYears !== null && (ageYears < 0 || ageYears > 120)) {
-      setError('Age must be between 0 and 120 years.')
+      setError(t('symptoms.errorAge'))
       return
     }
 
     const durationDays = parseOptionalNumber(duration)
     if (durationDays !== null && (durationDays < 0 || durationDays > 365)) {
-      setError('How long you have had the symptoms must be between 0 and 365 days.')
+      setError(t('symptoms.errorDuration'))
       return
     }
 
@@ -81,10 +83,7 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
       setStatus('idle')
     } catch (err) {
       if (err.name === 'AbortError') return
-      setError(
-        err.message ||
-          'We could not reach the health service. Check your connection and try again.',
-      )
+      setError(err.message || t('symptoms.errorService'))
       setStatus('idle')
     }
   }
@@ -99,21 +98,18 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
     <section className="triage" aria-labelledby="triage-title">
       <div className="triage-intro">
         <button type="button" className="btn btn-outline btn-back" onClick={onBack}>
-          &larr; Back to home
+          {t('common.backHome')}
         </button>
-        <h1 id="triage-title">Check Your Symptoms</h1>
-        <p className="triage-lead">
-          Tell us what you are feeling. SevaCare gives first-level urgency guidance and safe next
-          steps. It does not diagnose illness or prescribe medicine.
-        </p>
+        <h1 id="triage-title">{t('symptoms.title')}</h1>
+        <p className="triage-lead">{t('symptoms.lead')}</p>
       </div>
 
       <div className="triage-grid">
         <form className="triage-card" onSubmit={handleSubmit} noValidate>
           <div className="field">
-            <label htmlFor="symptoms">Symptoms</label>
+            <label htmlFor="symptoms">{t('symptoms.label')}</label>
             <p className="field-hint" id="symptoms-hint">
-              Enter one symptom per line, for example: fever, then cough on the next line.
+              {t('symptoms.hint')}
             </p>
             <textarea
               id="symptoms"
@@ -121,7 +117,7 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
               rows={5}
               value={symptomsText}
               onChange={(event) => setSymptomsText(event.target.value)}
-              placeholder={'fever\ncough\nheadache'}
+              placeholder={t('symptoms.placeholder')}
               aria-describedby="symptoms-hint"
               required
             />
@@ -129,7 +125,7 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
 
           <div className="field-row">
             <div className="field">
-              <label htmlFor="age">Age (years)</label>
+              <label htmlFor="age">{t('symptoms.age')}</label>
               <input
                 id="age"
                 name="age"
@@ -137,14 +133,14 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
                 inputMode="numeric"
                 min="0"
                 max="120"
-                placeholder="Optional"
+                placeholder={t('common.optional')}
                 value={age}
                 onChange={(event) => setAge(event.target.value)}
               />
             </div>
 
             <div className="field">
-              <label htmlFor="duration">How long? (days)</label>
+              <label htmlFor="duration">{t('symptoms.duration')}</label>
               <input
                 id="duration"
                 name="duration"
@@ -152,7 +148,7 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
                 inputMode="numeric"
                 min="0"
                 max="365"
-                placeholder="Optional"
+                placeholder={t('common.optional')}
                 value={duration}
                 onChange={(event) => setDuration(event.target.value)}
               />
@@ -167,39 +163,34 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
 
           <div className="triage-actions">
             <button type="submit" className="btn btn-primary" disabled={status === 'loading'}>
-              {status === 'loading' ? 'Checking…' : 'Get Guidance'}
+              {status === 'loading' ? t('symptoms.checking') : t('symptoms.submit')}
             </button>
             {result && (
               <button type="button" className="btn btn-outline" onClick={reset}>
-                Start over
+                {t('symptoms.startOver')}
               </button>
             )}
           </div>
 
-          <p className="safety-note">
-            In an emergency, contact a doctor or your local emergency number right away.
-          </p>
+          <p className="safety-note">{t('symptoms.safety')}</p>
 
           {isAuthenticated && (
-            <p className="history-note">Results are saved to your profile history.</p>
+            <p className="history-note">{t('symptoms.savedNote')}</p>
           )}
         </form>
 
         <div className="triage-result" aria-live="polite">
           {!result && status !== 'loading' && (
             <div className="result-placeholder">
-              <h2>Your guidance will appear here</h2>
-              <p>
-                Share your symptoms to see an urgency level and safe next steps. This is general
-                health information, not a diagnosis.
-              </p>
+              <h2>{t('symptoms.placeholderTitle')}</h2>
+              <p>{t('symptoms.placeholderBody')}</p>
             </div>
           )}
 
           {status === 'loading' && (
             <div className="result-placeholder" role="status">
-              <h2>Checking your symptoms…</h2>
-              <p>This usually takes a moment.</p>
+              <h2>{t('symptoms.loadingTitle')}</h2>
+              <p>{t('symptoms.loadingBody')}</p>
             </div>
           )}
 
@@ -209,19 +200,19 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
               tabIndex={-1}
               className={`result-card ${URGENCY_META[result.urgency_code]?.className || 'is-consult'}`}
             >
-              <p className="result-eyebrow">Urgency</p>
+              <p className="result-eyebrow">{t('symptoms.urgencyEyebrow')}</p>
               <h2 className="result-urgency">{result.urgency}</h2>
               <p className="result-summary">{result.summary}</p>
 
               {result.emergency && (
                 <p className="result-emergency" role="alert">
-                  Warning signs of an emergency were found. Get medical help now.
+                  {t('symptoms.emergencyWarning')}
                 </p>
               )}
 
               {result.red_flags.length > 0 && (
                 <div className="result-block">
-                  <h3>Warning signs found</h3>
+                  <h3>{t('symptoms.redFlagsTitle')}</h3>
                   <ul>
                     {result.red_flags.map((flag) => (
                       <li key={flag}>{flag}</li>
@@ -231,7 +222,7 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
               )}
 
               <div className="result-block">
-                <h3>What you can do next</h3>
+                <h3>{t('symptoms.adviceTitle')}</h3>
                 <ul>
                   {result.advice.map((item) => (
                     <li key={item}>{item}</li>
@@ -240,7 +231,7 @@ export default function SymptomCheck({ language, isAuthenticated = false, onBack
               </div>
 
               <p className="result-disclaimer">{result.disclaimer}</p>
-              <p className="result-engine">Guidance source: {result.engine}</p>
+              <p className="result-engine">{t('symptoms.source', { engine: result.engine })}</p>
             </article>
           )}
         </div>

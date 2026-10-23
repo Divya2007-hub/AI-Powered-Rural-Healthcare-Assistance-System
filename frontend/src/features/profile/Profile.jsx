@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { updateProfile } from '../../api/auth.js'
 import { deleteTriageHistory, listTriageHistory } from '../../api/history.js'
-import { LANGUAGES } from '../../i18n/languages.js'
-
-const dateFormat = new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+import { useI18n } from '../../i18n/I18nProvider.jsx'
+import { localeFor } from '../../i18n/languages.js'
 
 const URGENCY_CLASS = {
   low: 'is-low',
@@ -23,6 +22,11 @@ function initialsOf(name) {
 }
 
 export default function Profile({ user, onUserUpdated, onLogout, onBack }) {
+  const { language: uiLanguage, languages, t } = useI18n()
+  const dateFormat = useMemo(
+    () => new Intl.DateTimeFormat(localeFor(uiLanguage), { dateStyle: 'medium', timeStyle: 'short' }),
+    [uiLanguage],
+  )
   const [name, setName] = useState(user.name)
   const [language, setLanguage] = useState(user.language || 'en')
   const [saving, setSaving] = useState(false)
@@ -44,7 +48,7 @@ export default function Profile({ user, onUserUpdated, onLogout, onBack }) {
       })
       .catch((err) => {
         if (!active || err.name === 'AbortError') return
-        setHistoryError(err.message || 'We could not load your history.')
+        setHistoryError(err.message || t('profile.errorLoad'))
         setHistoryStatus('error')
       })
 
@@ -63,29 +67,29 @@ export default function Profile({ user, onUserUpdated, onLogout, onBack }) {
     try {
       const updated = await updateProfile({ name, language })
       onUserUpdated(updated)
-      setMessage('Profile updated.')
+      setMessage(t('profile.updated'))
     } catch (err) {
-      setSaveError(err.message || 'We could not save your profile.')
+      setSaveError(err.message || t('profile.errorSave'))
     } finally {
       setSaving(false)
     }
   }
 
   const removeEntry = async (historyId) => {
-    if (!window.confirm('Remove this entry from your history?')) return
+    if (!window.confirm(t('profile.confirmRemove'))) return
 
     try {
       await deleteTriageHistory(historyId)
       setHistory((current) => current.filter((entry) => entry.id !== historyId))
     } catch (err) {
-      setHistoryError(err.message || 'We could not remove that entry.')
+      setHistoryError(err.message || t('profile.errorRemove'))
     }
   }
 
   return (
     <section className="profile" aria-labelledby="profile-title">
       <button type="button" className="btn btn-outline btn-back" onClick={onBack}>
-        &larr; Back to home
+        {t('common.backHome')}
       </button>
 
       <div className="profile-card">
@@ -100,7 +104,7 @@ export default function Profile({ user, onUserUpdated, onLogout, onBack }) {
         <form className="profile-form" onSubmit={saveProfile} noValidate>
           <div className="field-row">
             <div className="field">
-              <label htmlFor="profile-name">Full name</label>
+              <label htmlFor="profile-name">{t('profile.name')}</label>
               <input
                 id="profile-name"
                 name="name"
@@ -112,14 +116,14 @@ export default function Profile({ user, onUserUpdated, onLogout, onBack }) {
             </div>
 
             <div className="field">
-              <label htmlFor="profile-language">Preferred language</label>
+              <label htmlFor="profile-language">{t('profile.language')}</label>
               <select
                 id="profile-language"
                 name="language"
                 value={language}
                 onChange={(event) => setLanguage(event.target.value)}
               >
-                {LANGUAGES.map((option) => (
+                {languages.map((option) => (
                   <option key={option.code} value={option.code}>
                     {option.name}
                   </option>
@@ -141,19 +145,21 @@ export default function Profile({ user, onUserUpdated, onLogout, onBack }) {
 
           <div className="profile-actions">
             <button type="submit" className="btn btn-primary" disabled={saving}>
-              {saving ? 'Saving…' : 'Save changes'}
+              {saving ? t('common.saving') : t('profile.save')}
             </button>
             <button type="button" className="btn btn-outline" onClick={onLogout}>
-              Log out
+              {t('profile.logout')}
             </button>
           </div>
         </form>
       </div>
 
       <div className="history-section" aria-live="polite">
-        <h2>Your symptom history</h2>
+        <h2>{t('profile.historyTitle')}</h2>
 
-        {historyStatus === 'loading' && <p className="facilities-status">Loading history…</p>}
+        {historyStatus === 'loading' && (
+          <p className="facilities-status">{t('profile.historyLoading')}</p>
+        )}
 
         {historyStatus === 'error' && (
           <p className="form-error" role="alert">
@@ -163,8 +169,8 @@ export default function Profile({ user, onUserUpdated, onLogout, onBack }) {
 
         {historyStatus === 'idle' && history.length === 0 && (
           <div className="result-placeholder">
-            <h2>No history yet</h2>
-            <p>When you check symptoms while logged in, the results appear here.</p>
+            <h2>{t('profile.historyEmptyTitle')}</h2>
+            <p>{t('profile.historyEmptyBody')}</p>
           </div>
         )}
 
@@ -189,7 +195,7 @@ export default function Profile({ user, onUserUpdated, onLogout, onBack }) {
                     className="link-button"
                     onClick={() => removeEntry(entry.id)}
                   >
-                    Remove
+                    {t('common.remove')}
                   </button>
                 </li>
               )

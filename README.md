@@ -71,4 +71,8 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
 - Pharmacist portal: users with the `pharmacist` role can manage their facility's
   medicine stock (`GET/POST/PATCH/DELETE /api/v1/pharmacist/stock`). In development,
   a demo pharmacist is seeded as `pharmacist@sevacare.demo` / `Pharmacist123`.
-- Translations and SMS support are not built yet.
+- Multi-language UI: English, Hindi, Kannada, Tamil, Telugu, and Marathi
+  (stored in `localStorage`, switchable from the header and home page). Triage
+  guidance, urgency labels, red flags, and disclaimers are localized by the
+  `ai-engine`; unsupported codes fall back to English.
+- SMS support is not built yet.

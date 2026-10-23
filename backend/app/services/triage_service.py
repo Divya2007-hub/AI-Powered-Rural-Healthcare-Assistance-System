@@ -1,4 +1,4 @@
-from triage_engine import SymptomRequest, TriageEngine, get_engine
+from triage_engine import SymptomRequest, TriageEngine, get_engine, urgency_label
 
 from app.schemas.triage import TriageRequest, TriageResponse
 
@@ -23,7 +23,7 @@ class TriageService:
             )
         )
         return TriageResponse(
-            urgency=result.urgency.value,
+            urgency=urgency_label(payload.language, result.urgency_code),
             urgency_code=result.urgency_code,
             emergency=result.emergency,
             red_flags=list(result.red_flags),

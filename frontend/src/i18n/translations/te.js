@@ -1,0 +1,198 @@
+const te = {
+  'brand.tagline': 'ప్రతి ఇంటికీ ఆరోగ్యం',
+  'nav.skip': 'ప్రధాన కంటెంట్కు వెళ్లండి',
+  'nav.home': 'హోమ్',
+  'nav.symptoms': 'లక్షణాలను తనిఖీ చేయండి',
+  'nav.nearby': 'సమీప ఆరోగ్య సేవలు',
+  'nav.medicine': 'మందు',
+  'nav.login': 'లాగిన్',
+  'nav.profile': 'ప్రొఫైల్',
+  'nav.pharmacy': 'ఫార్మసీ',
+  'nav.language': 'భాష',
+
+  'hero.title1': 'మీ ఆరోగ్యం',
+  'hero.title2': 'మా ప్రాధాన్యత',
+  'hero.lead':
+    'త్వరిత ఆరోగ్య మార్గదర్శనం పొందండి మరియు సమీపంలోని ఆసుపత్రులు, క్లినిక్లు, వైద్యులు మరియు ఫార్మసీలను కనుగొనండి — దూరప్రాంతాల్లోనూ.',
+  'feature.symptoms': 'లక్షణ తనిఖీ',
+  'feature.nearby': 'సమీప ఆరోగ్య సేవలు',
+  'feature.medicine': 'మందు లభ్యత',
+  'feature.sms': 'ఎస్ఎంఎస్ మద్దతు',
+  'feature.smsNote': '(తక్కువ కనెక్టివిటీ)',
+  'hero.getStarted': 'ప్రారంభించండి',
+  'hero.watchVideo': 'వీడియో చూడండి',
+  'hero.quote1': 'మెరుగైన',
+  'hero.quote2': 'ఆరోగ్య సేవ',
+  'hero.quote3': 'ఆరోగ్యకరమైన',
+  'hero.quote4': 'రేపటి కోసం',
+  'hero.safety':
+    'SevaCare సాధారణ ఆరోగ్య సమాచారాన్ని మాత్రమే అందిస్తుంది. ఇది వ్యాధిని నిర్ధారించదు లేదా మందు సూచించదు. అత్యవసర పరిస్థితిలో వైద్యుడిని లేదా మీ స్థానిక అత్యవసర నంబర్ను సంప్రదించండి.',
+  'home.languageTitle': 'మీ భాషను ఎంచుకోండి',
+  'home.languageChanged': 'భాష {name}కి మార్చబడింది.',
+  'home.comingSoon': '{label} త్వరలో వస్తుంది. ఈ పేజీ ఇంకా నిర్మించబడలేదు.',
+
+  'common.backHome': '← హోమ్కు తిరిగి వెళ్లండి',
+  'common.optional': 'ఐచ్ఛికం',
+  'common.search': 'వెతకండి',
+  'common.clear': 'క్లియర్',
+  'common.save': 'సేవ్',
+  'common.saving': 'సేవ్ అవుతోంది…',
+  'common.remove': 'తీసివేయండి',
+  'common.inStock': 'స్టాక్లో ఉంది',
+  'common.outOfStock': 'స్టాక్లో లేదు',
+  'common.call': '{phone}కి కాల్ చేయండి',
+  'common.kmAway': '{distance} కిమీ దూరం',
+
+  'symptoms.title': 'మీ లక్షణాలను తనిఖీ చేయండి',
+  'symptoms.lead':
+    'మీకు ఎలా అనిపిస్తుందో చెప్పండి. SevaCare ప్రాథమిక అత్యవసర మార్గదర్శనం మరియు సురక్షితమైన తదుపరి చర్యలను అందిస్తుంది. ఇది వ్యాధిని నిర్ధారించదు లేదా మందు సూచించదు.',
+  'symptoms.label': 'లక్షణాలు',
+  'symptoms.hint':
+    'ప్రతి లైన్లో ఒక లక్షణం రాయండి, ఉదాహరణకు మొదటి లైన్లో జ్వరం, తదుపరి లైన్లో దగ్గు.',
+  'symptoms.placeholder': 'జ్వరం\nదగ్గు\nతలనొప్పి',
+  'symptoms.age': 'వయస్సు (సంవత్సరాలు)',
+  'symptoms.duration': 'ఎన్ని రోజులుగా? (రోజులు)',
+  'symptoms.errorEmpty': 'దయచేసి కనీసం ఒక లక్షణం నమోదు చేయండి.',
+  'symptoms.errorAge': 'వయస్సు 0 నుండి 120 సంవత్సరాల మధ్య ఉండాలి.',
+  'symptoms.errorDuration':
+    'లక్షణాలు ఎన్ని రోజులుగా ఉన్నాయో 0 నుండి 365 రోజుల మధ్య ఉండాలి.',
+  'symptoms.submit': 'మార్గదర్శనం పొందండి',
+  'symptoms.checking': 'తనిఖీ అవుతోంది…',
+  'symptoms.startOver': 'మళ్లీ ప్రారంభించండి',
+  'symptoms.safety':
+    'అత్యవసర పరిస్థితిలో వెంటనే వైద్యుడిని లేదా మీ స్థానిక అత్యవసర నంబర్ను సంప్రదించండి.',
+  'symptoms.savedNote': 'ఫలితాలు మీ ప్రొఫైల్ చరిత్రలో సేవ్ అవుతాయి.',
+  'symptoms.errorService':
+    'మేము ఆరోగ్య సేవను చేరుకోలేకపోయాము. మీ కనెక్షన్ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.',
+  'symptoms.placeholderTitle': 'మీ మార్గదర్శనం ఇక్కడ కనిపిస్తుంది',
+  'symptoms.placeholderBody':
+    'మీ లక్షణాలను పంచుకుని అత్యవసర స్థాయి మరియు సురక్షితమైన తదుపరి చర్యలను చూడండి. ఇది సాధారణ ఆరోగ్య సమాచారం, వ్యాధి నిర్ధారణ కాదు.',
+  'symptoms.loadingTitle': 'మీ లక్షణాలు తనిఖీ అవుతున్నాయి…',
+  'symptoms.loadingBody': 'ఇది సాధారణంగా కొద్దిసేపు పడుతుంది.',
+  'symptoms.urgencyEyebrow': 'అత్యవసర స్థాయి',
+  'symptoms.emergencyWarning':
+    'అత్యవసర పరిస్థితి హెచ్చరిక సంకేతాలు కనుగొనబడ్డాయి. ఇప్పుడే వైద్య సహాయం పొందండి.',
+  'symptoms.redFlagsTitle': 'కనుగొన్న హెచ్చరిక సంకేతాలు',
+  'symptoms.adviceTitle': 'తర్వాత మీరు ఏమి చేయవచ్చు',
+  'symptoms.source': 'మార్గదర్శన మూలం: {engine}',
+
+  'nearby.title': 'సమీప ఆరోగ్య సేవలు',
+  'nearby.lead':
+    'మీ సమీపంలోని ప్రాథమిక ఆరోగ్య కేంద్రాలు, సామాజిక ఆరోగ్య కేంద్రాలు, ఆసుపత్రులు మరియు ఫార్మసీలను కనుగొనండి. సమయాలు మరియు సేవలను నిర్ధారించుకోవడానికి ముందే కాల్ చేయండి.',
+  'nearby.cityLabel': 'గ్రామం, పట్టణం లేదా నగరం',
+  'nearby.cityPlaceholder': 'ఉదా. రాంపూర్',
+  'nearby.typeLabel': 'సంస్థ రకం',
+  'nearby.allTypes': 'అన్ని రకాలు',
+  'nearby.emergencyOnly': 'అత్యవసర సేవలు లేదా 24x7 మాత్రమే',
+  'nearby.loading': 'ఆరోగ్య సంస్థలు లోడ్ అవుతున్నాయి…',
+  'nearby.error':
+    'మేము సమీప ఆరోగ్య సంస్థలను లోడ్ చేయలేకపోయాము. మీ కనెక్షన్ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.',
+  'nearby.emptyTitle': 'సంస్థలు ఏవీ కనుగొనబడలేదు',
+  'nearby.emptyBody':
+    'వేరే గ్రామం, పట్టణం లేదా నగరాన్ని ప్రయత్నించండి, లేదా ఫిల్టర్లను క్లియర్ చేయండి.',
+  'nearby.showingOne': '1 సంస్థ చూపబడుతోంది',
+  'nearby.showingMany': '{count} సంస్థలు చూపబడుతున్నాయి',
+  'nearby.open24': '24x7 తెరిచి ఉంది',
+  'nearby.emergencyBadge': 'అత్యవసర సేవలు',
+  'nearby.safety':
+    'ఈ జాబితాలు అభివృద్ధి కోసం డెమో డేటా. అత్యవసర పరిస్థితిలో మీ స్థానిక అత్యవసర నంబర్కు కాల్ చేయండి.',
+  'facilityType.PHC': 'ప్రాథమిక ఆరోగ్య కేంద్రం (PHC)',
+  'facilityType.CHC': 'సామాజిక ఆరోగ్య కేంద్రం (CHC)',
+  'facilityType.Hospital': 'ఆసుపత్రి',
+  'facilityType.Pharmacy': 'ఫార్మసీ',
+
+  'medicine.title': 'మందు లభ్యత',
+  'medicine.lead':
+    'సమీపంలోని ఏ ఫార్మసీలు మరియు ఆరోగ్య కేంద్రాలలో ఇప్పుడు మందు స్టాక్లో ఉందో తనిఖీ చేయండి. లభ్యత సమాచారం కోసం మాత్రమే. SevaCare మందులు లేదా మోతాదులు సూచించదు.',
+  'medicine.nameLabel': 'మందు పేరు',
+  'medicine.namePlaceholder': 'ఉదా. పారాసిటమాల్',
+  'medicine.inStockOnly': 'స్టాక్లో ఉన్న మందులను మాత్రమే చూపించు',
+  'medicine.loading': 'మందు లభ్యత లోడ్ అవుతోంది…',
+  'medicine.error':
+    'మేము మందు లభ్యతను లోడ్ చేయలేకపోయాము. మీ కనెక్షన్ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.',
+  'medicine.emptyTitle': 'మందు లభ్యత ఏదీ కనుగొనబడలేదు',
+  'medicine.emptyBody':
+    'వేరే మందు పేరు లేదా స్థలాన్ని ప్రయత్నించండి, లేదా ఫిల్టర్లను క్లియర్ చేయండి.',
+  'medicine.showingOne': '1 ఫలితం చూపబడుతోంది',
+  'medicine.showingMany': '{count} ఫలితాలు చూపబడుతున్నాయి',
+  'medicine.available': '{quantity} {unit} అందుబాటులో',
+  'medicine.safety':
+    'లభ్యత మరియు ధరలు అభివృద్ధి కోసం డెమో డేటా. ఏదైనా మందు తీసుకునే ముందు వైద్యుడిని లేదా ఫార్మసిస్ట్ను అడగండి. అత్యవసర పరిస్థితిలో మీ స్థానిక అత్యవసర నంబర్కు కాల్ చేయండి.',
+
+  'auth.createTitle': 'మీ ఖాతాను సృష్టించండి',
+  'auth.loginTitle': 'మళ్లీ స్వాగతం',
+  'auth.createLead':
+    'మీ లక్షణ తనిఖీలను సేవ్ చేసి మీ ఆరోగ్య చరిత్రను ఒకే చోట ఉంచండి.',
+  'auth.loginLead':
+    'మీ ప్రొఫైల్ మరియు గత లక్షణ తనిఖీలను చూడటానికి లాగిన్ అవ్వండి.',
+  'auth.name': 'పూర్తి పేరు',
+  'auth.email': 'ఇమెయిల్',
+  'auth.password': 'పాస్వర్డ్',
+  'auth.passwordHint': 'కనీసం 8 అక్షరాలు ఉపయోగించండి.',
+  'auth.language': 'ఇష్టపడే భాష',
+  'auth.wait': 'దయచేసి వేచి ఉండండి…',
+  'auth.createAccount': 'ఖాతా సృష్టించండి',
+  'auth.login': 'లాగిన్',
+  'auth.haveAccount': 'ఇప్పటికే ఖాతా ఉందా?',
+  'auth.newUser': 'SevaCareకి కొత్తవారా?',
+  'auth.createOne': 'ఖాతా సృష్టించండి',
+  'auth.error': 'మేము మిమ్మల్ని సైన్ ఇన్ చేయలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+  'auth.safety':
+    'మీ ఖాతా మీ లక్షణ చరిత్రను మీకు ప్రైవేట్గా ఉంచుతుంది. SevaCare మీ డేటాను ఎప్పుడూ అమ్మదు.',
+
+  'profile.name': 'పూర్తి పేరు',
+  'profile.language': 'ఇష్టపడే భాష',
+  'profile.save': 'మార్పులను సేవ్ చేయండి',
+  'profile.logout': 'లాగ్ అవుట్',
+  'profile.updated': 'ప్రొఫైల్ నవీకరించబడింది.',
+  'profile.errorSave': 'మేము మీ ప్రొఫైల్ను సేవ్ చేయలేకపోయాము.',
+  'profile.errorLoad': 'మేము మీ చరిత్రను లోడ్ చేయలేకపోయాము.',
+  'profile.errorRemove': 'మేము ఆ నమోదును తీసివేయలేకపోయాము.',
+  'profile.confirmRemove': 'ఈ నమోదును మీ చరిత్ర నుండి తీసివేయాలా?',
+  'profile.historyTitle': 'మీ లక్షణ చరిత్ర',
+  'profile.historyLoading': 'చరిత్ర లోడ్ అవుతోంది…',
+  'profile.historyEmptyTitle': 'ఇంకా చరిత్ర లేదు',
+  'profile.historyEmptyBody':
+    'మీరు లాగిన్ అయి ఉన్నప్పుడు లక్షణాలను తనిఖీ చేస్తే ఫలితాలు ఇక్కడ కనిపిస్తాయి.',
+
+  'pharmacy.title': 'ఫార్మసీ పోర్టల్',
+  'pharmacy.lead':
+    '{facility} కోసం మందు స్టాక్ను నవీకరించండి. మార్పులు రోగులకు వెంటనే కనిపిస్తాయి.',
+  'pharmacy.leadGeneric': 'మీ ఫార్మసీ మందు స్టాక్ను నవీకరించండి.',
+  'pharmacy.loading': 'మీ స్టాక్ లోడ్ అవుతోంది…',
+  'pharmacy.loadError': 'మేము మీ స్టాక్ను లోడ్ చేయలేకపోయాము.',
+  'pharmacy.addTitle': 'మందు జోడించండి',
+  'pharmacy.name': 'మందు పేరు',
+  'pharmacy.namePlaceholder': 'ఉదా. సెటిరిజిన్ 10mg',
+  'pharmacy.category': 'వర్గం',
+  'pharmacy.categoryPlaceholder': 'ఉదా. అలర్జీ',
+  'pharmacy.quantity': 'పరిమాణం',
+  'pharmacy.unit': 'యూనిట్',
+  'pharmacy.unitPlaceholder': 'స్ట్రిప్',
+  'pharmacy.price': 'ధర (₹)',
+  'pharmacy.add': 'మందు జోడించండి',
+  'pharmacy.adding': 'జోడిస్తోంది…',
+  'pharmacy.added': '{name} జోడించబడింది.',
+  'pharmacy.addError': 'మేము ఈ మందును జోడించలేకపోయాము.',
+  'pharmacy.stockTitle': 'ప్రస్తుత స్టాక్ ({count})',
+  'pharmacy.emptyTitle': 'ఇంకా మందులు లేవు',
+  'pharmacy.emptyBody': 'పైన ఉన్న ఫారమ్ ఉపయోగించి మీ మొదటి మందును జోడించండి.',
+  'pharmacy.updated': 'స్టాక్ నవీకరించబడింది.',
+  'pharmacy.removed': 'మందు తీసివేయబడింది.',
+  'pharmacy.confirmRemove': '{name}ను మీ స్టాక్ నుండి తీసివేయాలా?',
+  'pharmacy.updateError': 'మేము ఈ మందును నవీకరించలేకపోయాము.',
+  'pharmacy.removeError': 'మేము ఈ మందును తీసివేయలేకపోయాము.',
+  'pharmacy.requiredName': 'మందు పేరు అవసరం.',
+  'pharmacy.safety':
+    'స్టాక్ను నిజాయితీగా నవీకరించండి. SevaCare మందు సూచించదు; రోగులు ఎప్పుడూ వైద్యుడిని లేదా ఫార్మసిస్ట్ను సంప్రదించాలి.',
+
+  'a11y.brandHome': 'SevaCare హోమ్',
+  'a11y.mainNav': 'ప్రధాన నావిగేషన్',
+  'a11y.features': 'మీరు ఏమి చేయగలరు',
+  'a11y.heroPhoto':
+    'గ్రామంలో ఒక మహిళ తన ఫోన్లో ఆరోగ్య మార్గదర్శన యాప్ను ఉపయోగిస్తూ నవ్వుతోంది',
+  'a11y.heroIllustration':
+    'పొలాలు మరియు ఇంటితో కూడిన గ్రామం చిత్రం, ప్రకాశవంతమైన ఆకాశం కింద, మరియు ఆరోగ్య క్రాస్ చూపించే ఫోన్',
+}
+
+export default te

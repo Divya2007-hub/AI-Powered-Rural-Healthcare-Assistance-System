@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from triage_engine.advice import CONSULT_ADVICE, FALLBACK_SUMMARY
+from triage_engine.language import localize_result
 from triage_engine.models import SymptomRequest, TriageAssessment, TriageResult, Urgency
 from triage_engine.providers.base import TriageProvider
 from triage_engine.providers.rule_based import RuleBasedTriageProvider
@@ -37,7 +38,8 @@ class TriageEngine:
                 advice=CONSULT_ADVICE,
             )
 
-        return self._safety.apply(request, assessment, self.provider_name)
+        result = self._safety.apply(request, assessment, self.provider_name)
+        return localize_result(result, request.language)
 
 
 _default_engine: TriageEngine | None = None
