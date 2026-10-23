@@ -969,6 +969,25 @@ main {
   color: var(--green-900);
 }
 
+.location-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.location-bar .btn {
+  min-height: 44px;
+  padding: 0 18px;
+}
+
+.location-status {
+  margin: 0;
+  font-weight: 600;
+  color: var(--muted);
+}
+
 .facility-list {
   list-style: none;
   margin: 0;
@@ -1059,6 +1078,13 @@ main {
   color: #8a1c14;
 }
 
+.facility-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+}
+
 .facility-phone {
   display: inline-flex;
   align-items: center;
@@ -1068,6 +1094,19 @@ main {
 }
 
 .facility-phone:hover {
+  text-decoration: none;
+  color: var(--green-900);
+}
+
+.facility-map {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+.facility-map:hover {
   text-decoration: none;
   color: var(--green-900);
 }

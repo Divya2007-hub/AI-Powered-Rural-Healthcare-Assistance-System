@@ -13,7 +13,7 @@ class FacilityRepository:
         city: str | None = None,
         facility_type: str | None = None,
         emergency_only: bool = False,
-        limit: int = 20,
+        limit: int | None = 20,
     ) -> list[Facility]:
         query = self._db.query(Facility)
 
@@ -24,4 +24,7 @@ class FacilityRepository:
         if emergency_only:
             query = query.filter(or_(Facility.emergency_services.is_(True), Facility.open_24x7.is_(True)))
 
-        return query.order_by(Facility.distance_km.asc().nullslast(), Facility.id.asc()).limit(limit).all()
+        query = query.order_by(Facility.distance_km.asc().nullslast(), Facility.id.asc())
+        if limit is not None:
+            query = query.limit(limit)
+        return query.all()

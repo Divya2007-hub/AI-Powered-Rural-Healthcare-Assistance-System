@@ -28,9 +28,12 @@ export default function NearbyHealthcare({ onBack }) {
   const [facilities, setFacilities] = useState([])
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
+  const [coords, setCoords] = useState(null)
+  const [locating, setLocating] = useState(false)
+  const [geoError, setGeoError] = useState('')
   const requestRef = useRef(null)
 
-  const load = async (filters) => {
+  const load = async (filters, location = coords) => {
     requestRef.current?.abort()
     const controller = new AbortController()
     requestRef.current = controller
@@ -38,8 +41,12 @@ export default function NearbyHealthcare({ onBack }) {
     setStatus('loading')
     setError('')
 
+    const withLocation = location
+      ? { ...filters, lat: location.lat, lng: location.lng }
+      : filters
+
     try {
-      const data = await listNearbyFacilities(filters, { signal: controller.signal })
+      const data = await listNearbyFacilities(withLocation, { signal: controller.signal })
       setFacilities(data.facilities)
       setStatus('idle')
     } catch (err) {
@@ -67,6 +74,37 @@ export default function NearbyHealthcare({ onBack }) {
     load({ limit: 50 })
   }
 
+  const useMyLocation = () => {
+    setGeoError('')
+
+    if (!navigator.geolocation) {
+      setGeoError(t('nearby.geoUnsupported'))
+      return
+    }
+
+    setLocating(true)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const next = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        }
+        setCoords(next)
+        setLocating(false)
+        load({ city, type, emergencyOnly, limit: 50 }, next)
+      },
+      (err) => {
+        setLocating(false)
+        setGeoError(
+          err.code === err.PERMISSION_DENIED
+            ? t('nearby.geoDenied')
+            : t('nearby.geoError'),
+        )
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
+    )
+  }
+
   return (
     <section className="facilities" aria-labelledby="facilities-title">
       <div className="triage-intro">
@@ -75,6 +113,27 @@ export default function NearbyHealthcare({ onBack }) {
         </button>
         <h1 id="facilities-title">{t('nearby.title')}</h1>
         <p className="triage-lead">{t('nearby.lead')}</p>
+      </div>
+
+      <div className="location-bar">
+        <button
+          type="button"
+          className="btn btn-outline"
+          onClick={useMyLocation}
+          disabled={locating}
+        >
+          {locating ? t('nearby.locating') : t('nearby.useLocation')}
+        </button>
+        {coords && !geoError && (
+          <p className="location-status" role="status">
+            {t('nearby.locationActive')}
+          </p>
+        )}
+        {geoError && (
+          <p className="form-error" role="alert">
+            {geoError}
+          </p>
+        )}
       </div>
 
       <form className="facilities-filters" onSubmit={handleSubmit}>
@@ -184,11 +243,23 @@ export default function NearbyHealthcare({ onBack }) {
                     )}
                   </div>
 
-                  {facility.phone && (
-                    <a className="facility-phone" href={phoneHref(facility.phone)}>
-                      {t('common.call', { phone: facility.phone })}
-                    </a>
-                  )}
+                  <div className="facility-actions">
+                    {facility.phone && (
+                      <a className="facility-phone" href={phoneHref(facility.phone)}>
+                        {t('common.call', { phone: facility.phone })}
+                      </a>
+                    )}
+                    {facility.latitude != null && facility.longitude != null && (
+                      <a
+                        className="facility-map"
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${facility.latitude},${facility.longitude}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {t('nearby.mapsLink')}
+                      </a>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>

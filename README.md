@@ -62,7 +62,9 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
 - `GET /api/v1/facilities/nearby` lists facilities from a local SQLite database,
   seeded with demo data on first start.
 - Frontend "Nearby Healthcare" screen filters facilities by place, type, and
-  emergency/24x7 availability, and shows distance and contact details.
+  emergency/24x7 availability, shows distance and contact details, can sort by
+  the user's browser location (with a radius filter in the API), and links to
+  directions in Maps.
 - `GET /api/v1/medicines/availability` searches medicine stock by name, place,
   and stock status; the "Medicine Availability" screen shows stock, price, and
   the supplying facility.

@@ -94,6 +94,14 @@ const hi = {
   'nearby.emergencyBadge': 'आपातकालीन सेवाएँ',
   'nearby.safety':
     'ये सूचियाँ विकास के लिए डेमो डेटा हैं। आपात स्थिति में अपने स्थानीय आपातकालीन नंबर पर कॉल करें।',
+  'nearby.useLocation': 'मेरी लोकेशन उपयोग करें',
+  'nearby.locating': 'लोकेशन ढूँढ रहे हैं…',
+  'nearby.locationActive': 'दूरियाँ आपकी लोकेशन से दिखाई जा रही हैं।',
+  'nearby.geoUnsupported': 'यह ब्राउज़र लोकेशन सुविधा का समर्थन नहीं करता।',
+  'nearby.geoDenied':
+    'लोकेशन की अनुमति नहीं मिली। आप शहर या गाँव का नाम खोज सकते हैं।',
+  'nearby.geoError': 'हम आपकी लोकेशन नहीं पा सके। फिर से कोशिश करें या नाम से खोजें।',
+  'nearby.mapsLink': 'मैप में दिशा देखें',
   'facilityType.PHC': 'प्राथमिक स्वास्थ्य केंद्र (PHC)',
   'facilityType.CHC': 'सामुदायिक स्वास्थ्य केंद्र (CHC)',
   'facilityType.Hospital': 'अस्पताल',

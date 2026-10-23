@@ -94,6 +94,15 @@ const en = {
   'nearby.emergencyBadge': 'Emergency services',
   'nearby.safety':
     'Listings are demo data for development. In an emergency, call your local emergency number.',
+  'nearby.useLocation': 'Use my location',
+  'nearby.locating': 'Finding your location…',
+  'nearby.locationActive': 'Distances are shown from your location.',
+  'nearby.geoUnsupported': 'This browser does not support location services.',
+  'nearby.geoDenied':
+    'Location permission was denied. You can still search by village, town or city.',
+  'nearby.geoError':
+    'We could not get your location. Try again or search by name.',
+  'nearby.mapsLink': 'Open directions in Maps',
   'facilityType.PHC': 'Primary Health Centre (PHC)',
   'facilityType.CHC': 'Community Health Centre (CHC)',
   'facilityType.Hospital': 'Hospital',

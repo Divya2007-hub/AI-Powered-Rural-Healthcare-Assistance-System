@@ -91,7 +91,9 @@ and never recommends medicine.
 ## GET /facilities/nearby
 
 Returns healthcare facilities stored in the local SQLite database, sorted by
-distance (closest first, unknown distances last).
+distance (closest first, unknown distances last). When `lat` and `lng` are
+provided, distances are computed from the user's coordinates with the haversine
+formula; otherwise the stored demo distance is returned.
 
 ### Query parameters
 
@@ -101,6 +103,9 @@ distance (closest first, unknown distances last).
 | `type` | string | Optional. Case-insensitive partial match, e.g. `PHC`, `CHC`, `Hospital`, `Pharmacy`. Max 50 characters. |
 | `emergency_only` | boolean | Optional. Defaults to `false`. Keeps facilities with emergency services or 24x7 hours. |
 | `limit` | integer | Optional. Defaults to 20. Range 1-50. |
+| `lat` | float | Optional. Must be sent with `lng`. Range -90 to 90. |
+| `lng` | float | Optional. Must be sent with `lat`. Range -180 to 180. |
+| `radius_km` | float | Optional. Requires `lat` and `lng`. Range >0 to 500. Excludes facilities farther than this. |
 
 ### Response `200 OK`
 
@@ -128,7 +133,8 @@ distance (closest first, unknown distances last).
 
 ### Errors
 
-- `422 Unprocessable Entity` when a query parameter fails validation.
+- `422 Unprocessable Entity` when a query parameter fails validation, when only
+  one of `lat`/`lng` is sent, or when `radius_km` is sent without coordinates.
 
 ## GET /medicines/availability
 
