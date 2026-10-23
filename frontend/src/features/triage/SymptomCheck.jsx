@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { assessSymptoms } from '../../api/triage.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
+import { localeFor } from '../../i18n/languages.js'
+import { createSpeechRecognizer, isSpeechSupported } from './speech.js'
 
 const URGENCY_META = {
   low: { className: 'is-low', label: 'Low urgency' },
@@ -31,14 +33,80 @@ export default function SymptomCheck({ isAuthenticated = false, onBack }) {
   const [status, setStatus] = useState('idle')
   const [error, setError] = useState('')
   const [result, setResult] = useState(null)
+  const [listening, setListening] = useState(false)
+  const [voiceText, setVoiceText] = useState('')
+  const [voiceError, setVoiceError] = useState('')
   const resultRef = useRef(null)
   const requestRef = useRef(null)
+  const recognitionRef = useRef(null)
+  const speechSupported = isSpeechSupported()
 
   useEffect(() => {
     if (result) resultRef.current?.focus()
   }, [result])
 
-  useEffect(() => () => requestRef.current?.abort(), [])
+  useEffect(
+    () => () => {
+      requestRef.current?.abort()
+      recognitionRef.current?.abort?.()
+    },
+    [],
+  )
+
+  const stopListening = () => {
+    recognitionRef.current?.stop()
+    setListening(false)
+    setVoiceText('')
+  }
+
+  const startListening = () => {
+    setVoiceError('')
+    setVoiceText('')
+
+    const recognition = createSpeechRecognizer({
+      language: localeFor(language),
+      onTranscript: (transcript, isFinal) => {
+        if (!transcript) return
+        if (isFinal) {
+          setSymptomsText((current) => {
+            const base = current.trim()
+            return base ? `${base}\n${transcript}` : transcript
+          })
+          setVoiceText('')
+        } else {
+          setVoiceText(transcript)
+        }
+      },
+      onError: (code) => {
+        setListening(false)
+        setVoiceText('')
+        if (code === 'not-allowed' || code === 'service-not-allowed') {
+          setVoiceError(t('symptoms.voiceDenied'))
+        } else if (code === 'no-speech') {
+          setVoiceError(t('symptoms.voiceNoSpeech'))
+        } else {
+          setVoiceError(t('symptoms.voiceError'))
+        }
+      },
+      onEnd: () => {
+        setListening(false)
+        setVoiceText('')
+      },
+    })
+
+    if (!recognition) {
+      setVoiceError(t('symptoms.voiceUnsupported'))
+      return
+    }
+
+    recognitionRef.current = recognition
+    try {
+      recognition.start()
+      setListening(true)
+    } catch {
+      setVoiceError(t('symptoms.voiceError'))
+    }
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -121,6 +189,33 @@ export default function SymptomCheck({ isAuthenticated = false, onBack }) {
               aria-describedby="symptoms-hint"
               required
             />
+            <div className="voice-controls">
+              <button
+                type="button"
+                className={`btn btn-outline voice-button${listening ? ' is-listening' : ''}`}
+                onClick={listening ? stopListening : startListening}
+                disabled={!speechSupported}
+                aria-pressed={listening}
+              >
+                {listening ? t('symptoms.voiceStop') : t('symptoms.voiceStart')}
+              </button>
+              {listening && (
+                <span className="voice-status" role="status">
+                  {voiceText || t('symptoms.voiceListening')}
+                </span>
+              )}
+              {!speechSupported && (
+                <p className="field-hint voice-hint">{t('symptoms.voiceUnsupported')}</p>
+              )}
+              {speechSupported && !listening && (
+                <p className="field-hint voice-hint">{t('symptoms.voiceHint')}</p>
+              )}
+              {voiceError && (
+                <p className="form-error voice-error" role="alert">
+                  {voiceError}
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="field-row">

@@ -74,6 +74,18 @@ const hi = {
   'symptoms.redFlagsTitle': 'मिले चेतावनी संकेत',
   'symptoms.adviceTitle': 'अब आप क्या कर सकते हैं',
   'symptoms.source': 'मार्गदर्शन स्रोत: {engine}',
+  'symptoms.voiceStart': 'लक्षण बोलकर बताएँ',
+  'symptoms.voiceStop': 'सुनना बंद करें',
+  'symptoms.voiceListening': 'सुन रहे हैं…',
+  'symptoms.voiceUnsupported':
+    'इस ब्राउज़र में आवाज़ इनपुट समर्थित नहीं है। कृपया अपने लक्षण टाइप करें।',
+  'symptoms.voiceDenied':
+    'माइक्रोफ़ोन की अनुमति नहीं मिली। अनुमति दें या अपने लक्षण टाइप करें।',
+  'symptoms.voiceNoSpeech':
+    'कोई आवाज़ नहीं सुनाई दी। फिर से कोशिश करें या अपने लक्षण टाइप करें।',
+  'symptoms.voiceError':
+    'आवाज़ इनपुट अचानक रुक गया। फिर से कोशिश करें या अपने लक्षण टाइप करें।',
+  'symptoms.voiceHint': 'आवाज़ इनपुट आपकी चुनी हुई भाषा का उपयोग करता है।',
 
   'nearby.title': 'आसपास की स्वास्थ्य सेवाएँ',
   'nearby.lead':

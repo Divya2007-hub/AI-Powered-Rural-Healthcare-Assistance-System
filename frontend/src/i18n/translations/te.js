@@ -75,6 +75,18 @@ const te = {
   'symptoms.redFlagsTitle': 'కనుగొన్న హెచ్చరిక సంకేతాలు',
   'symptoms.adviceTitle': 'తర్వాత మీరు ఏమి చేయవచ్చు',
   'symptoms.source': 'మార్గదర్శన మూలం: {engine}',
+  'symptoms.voiceStart': 'లక్షణాలను మాట్లాడండి',
+  'symptoms.voiceStop': 'వినడం ఆపండి',
+  'symptoms.voiceListening': 'వింటోంది…',
+  'symptoms.voiceUnsupported':
+    'ఈ బ్రౌజర్లో వాయిస్ ఇన్పుట్కు మద్దతు లేదు. దయచేసి మీ లక్షణాలను టైప్ చేయండి.',
+  'symptoms.voiceDenied':
+    'మైక్రోఫోన్ అనుమతి నిరాకరించబడింది. అనుమతి ఇవ్వండి లేదా మీ లక్షణాలను టైప్ చేయండి.',
+  'symptoms.voiceNoSpeech':
+    'ఏ మాటలు వినిపించలేదు. మళ్లీ ప్రయత్నించండి లేదా మీ లక్షణాలను టైప్ చేయండి.',
+  'symptoms.voiceError':
+    'వాయిస్ ఇన్పుట్ అనుకోకుండా ఆగిపోయింది. మళ్లీ ప్రయత్నించండి లేదా మీ లక్షణాలను టైప్ చేయండి.',
+  'symptoms.voiceHint': 'వాయిస్ ఇన్పుట్ మీరు ఎంచుకున్న భాషను ఉపయోగిస్తుంది.',
 
   'nearby.title': 'సమీప ఆరోగ్య సేవలు',
   'nearby.lead':

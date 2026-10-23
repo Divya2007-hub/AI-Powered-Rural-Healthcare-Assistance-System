@@ -77,4 +77,6 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
   (stored in `localStorage`, switchable from the header and home page). Triage
   guidance, urgency labels, red flags, and disclaimers are localized by the
   `ai-engine`; unsupported codes fall back to English.
+- Voice symptom input: browsers that support the Web Speech API can dictate
+  symptoms in the selected language. Unsupported browsers fall back to typing.
 - SMS support is not built yet.

@@ -75,6 +75,18 @@ const mr = {
   'symptoms.redFlagsTitle': 'आढळलेली चेतावणी चिन्हे',
   'symptoms.adviceTitle': 'पुढे तुम्ही काय करू शकता',
   'symptoms.source': 'मार्गदर्शन स्रोत: {engine}',
+  'symptoms.voiceStart': 'लक्षणे बोलून सांगा',
+  'symptoms.voiceStop': 'ऐकणे थांबवा',
+  'symptoms.voiceListening': 'ऐकत आहे…',
+  'symptoms.voiceUnsupported':
+    'या ब्राउझरमध्ये व्हॉइस इनपुट समर्थित नाही. कृपया तुमची लक्षणे टाइप करा.',
+  'symptoms.voiceDenied':
+    'मायक्रोफोनची परवानगी नाकारली गेली. परवानगी द्या किंवा तुमची लक्षणे टाइप करा.',
+  'symptoms.voiceNoSpeech':
+    'कोणतेही बोलणे ऐकू आले नाही. पुन्हा प्रयत्न करा किंवा तुमची लक्षणे टाइप करा.',
+  'symptoms.voiceError':
+    'व्हॉइस इनपुट अचानक थांबले. पुन्हा प्रयत्न करा किंवा तुमची लक्षणे टाइप करा.',
+  'symptoms.voiceHint': 'व्हॉइस इनपुट तुम्ही निवडलेली भाषा वापरते.',
 
   'nearby.title': 'जवळील आरोग्य सेवा',
   'nearby.lead':

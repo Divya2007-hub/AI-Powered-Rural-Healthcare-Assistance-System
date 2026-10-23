@@ -74,6 +74,18 @@ const en = {
   'symptoms.redFlagsTitle': 'Warning signs found',
   'symptoms.adviceTitle': 'What you can do next',
   'symptoms.source': 'Guidance source: {engine}',
+  'symptoms.voiceStart': 'Speak symptoms',
+  'symptoms.voiceStop': 'Stop listening',
+  'symptoms.voiceListening': 'Listening…',
+  'symptoms.voiceUnsupported':
+    'Voice input is not supported in this browser. Please type your symptoms.',
+  'symptoms.voiceDenied':
+    'Microphone permission was denied. Allow it or type your symptoms.',
+  'symptoms.voiceNoSpeech':
+    'No speech was detected. Please try again or type your symptoms.',
+  'symptoms.voiceError':
+    'Voice input stopped unexpectedly. Please try again or type your symptoms.',
+  'symptoms.voiceHint': 'Voice input uses your selected language.',
 
   'nearby.title': 'Nearby Healthcare',
   'nearby.lead':
