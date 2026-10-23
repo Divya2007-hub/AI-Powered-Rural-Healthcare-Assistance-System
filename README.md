@@ -11,7 +11,7 @@ and does not prescribe medicines**.
 | `frontend/` | React app (Vite). Talks to the backend over HTTP only. |
 | `backend/` | FastAPI app. Exposes the versioned REST API under `/api/v1`. |
 | `ai-engine/` | Standalone Python package for triage logic. Independent of FastAPI. |
-| `docs/` | Architecture notes, API contract, safety policy. |
+| `docs/` | Architecture notes, API contract, safety policy, evaluation results. |
 
 ## Prerequisites
 
@@ -41,6 +41,18 @@ npm run dev
 ```
 
 Open http://localhost:5173
+
+## Run the tests
+
+```bash
+cd backend && python -m pytest app/tests -q
+cd ai-engine && python -m pytest triage_engine/tests -q
+cd ai-engine && python -m triage_engine.evaluation
+cd frontend && npm test
+```
+
+The evaluation command prints a markdown report and exits non-zero if a safety
+threshold fails. See `docs/evaluation.md` for the methodology and latest results.
 
 ## Environment files
 
@@ -86,3 +98,7 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
   language prefix such as `hi:` switches the reply language. SMS goes through a
   mock provider (`backend/app/integrations/sms/`) until a real gateway is
   configured; the "SMS Support" screen demonstrates the flow in-app.
+- Testing and research evaluation: 52 backend tests, 15 ai-engine tests, 17
+  frontend tests (Vitest + React Testing Library), and a 44-case triage
+  evaluation harness covering urgency, emergency escalation, red-flag recall,
+  and language behavior. Results are in `docs/evaluation.md`.
