@@ -117,6 +117,10 @@ const te = {
   'nearby.geoError':
     'మీ స్థానాన్ని పొందలేకపోయాము. మళ్లీ ప్రయత్నించండి లేదా పేరుతో వెతకండి.',
   'nearby.mapsLink': 'మ్యాప్లో దారి చూడండి',
+  'nearby.mapTitle': 'సమీప సౌకర్యాల మ్యాప్',
+  'nearby.mapLabel': 'సమీప ఆరోగ్య సౌకర్యాలను చూపించే మ్యాప్',
+  'nearby.mapEmpty': 'మ్యాప్లో చూపించడానికి కోఆర్డినేట్లు ఉన్న సౌకర్యాలు లేవు.',
+  'nearby.mapLoading': 'మ్యాప్ లోడ్ అవుతోంది…',
   'facilityType.PHC': 'ప్రాథమిక ఆరోగ్య కేంద్రం (PHC)',
   'facilityType.CHC': 'సామాజిక ఆరోగ్య కేంద్రం (CHC)',
   'facilityType.Hospital': 'ఆసుపత్రి',

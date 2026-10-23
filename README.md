@@ -65,6 +65,8 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
   emergency/24x7 availability, shows distance and contact details, can sort by
   the user's browser location (with a radius filter in the API), and links to
   directions in Maps.
+- Nearby results include an interactive OpenStreetMap/Leaflet map with a marker
+  for each facility. The map is lazy-loaded so the initial bundle stays small.
 - `GET /api/v1/medicines/availability` searches medicine stock by name, place,
   and stock status; the "Medicine Availability" screen shows stock, price, and
   the supplying facility.

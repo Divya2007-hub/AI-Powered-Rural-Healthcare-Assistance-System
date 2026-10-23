@@ -116,6 +116,10 @@ const mr = {
   'nearby.geoError':
     'आम्हाला तुमचे स्थान मिळू शकले नाही. पुन्हा प्रयत्न करा किंवा नावाने शोधा.',
   'nearby.mapsLink': 'नकाशात दिशा पहा',
+  'nearby.mapTitle': 'जवळील सुविधांचा नकाशा',
+  'nearby.mapLabel': 'जवळील आरोग्य सुविधा दाखवणारा नकाशा',
+  'nearby.mapEmpty': 'नकाशात दाखवण्यासाठी निर्देशांक असलेल्या कोणत्याही सुविधा नाहीत.',
+  'nearby.mapLoading': 'नकाशा लोड होत आहे…',
   'facilityType.PHC': 'प्राथमिक आरोग्य केंद्र (PHC)',
   'facilityType.CHC': 'सामुदायिक आरोग्य केंद्र (CHC)',
   'facilityType.Hospital': 'रुग्णालय',

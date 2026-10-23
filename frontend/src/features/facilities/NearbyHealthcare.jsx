@@ -1,6 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { listNearbyFacilities } from '../../api/facilities.js'
 import { useI18n } from '../../i18n/I18nProvider.jsx'
+import { facilityTypeLabel } from './facilityTypes.js'
+
+const FacilityMap = lazy(() => import('./FacilityMap.jsx'))
 
 const FACILITY_TYPES = [
   { value: '', labelKey: 'nearby.allTypes' },
@@ -9,12 +12,6 @@ const FACILITY_TYPES = [
   { value: 'Hospital', labelKey: 'facilityType.Hospital' },
   { value: 'Pharmacy', labelKey: 'facilityType.Pharmacy' },
 ]
-
-function facilityTypeLabel(type, t) {
-  const key = `facilityType.${type}`
-  const translated = t(key)
-  return translated === key ? type : translated
-}
 
 function phoneHref(phone) {
   return `tel:${phone.replace(/[^\d+]/g, '')}`
@@ -213,6 +210,11 @@ export default function NearbyHealthcare({ onBack }) {
                 ? t('nearby.showingOne')
                 : t('nearby.showingMany', { count: facilities.length })}
             </p>
+            <Suspense
+              fallback={<p className="facilities-status">{t('nearby.mapLoading')}</p>}
+            >
+              <FacilityMap facilities={facilities} />
+            </Suspense>
             <ul className="facility-list">
               {facilities.map((facility) => (
                 <li key={facility.id} className="facility-card">

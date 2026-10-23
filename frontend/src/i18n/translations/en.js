@@ -115,6 +115,10 @@ const en = {
   'nearby.geoError':
     'We could not get your location. Try again or search by name.',
   'nearby.mapsLink': 'Open directions in Maps',
+  'nearby.mapTitle': 'Map of nearby facilities',
+  'nearby.mapLabel': 'Map showing nearby healthcare facilities',
+  'nearby.mapEmpty': 'No facilities with map coordinates to display.',
+  'nearby.mapLoading': 'Loading map…',
   'facilityType.PHC': 'Primary Health Centre (PHC)',
   'facilityType.CHC': 'Community Health Centre (CHC)',
   'facilityType.Hospital': 'Hospital',
