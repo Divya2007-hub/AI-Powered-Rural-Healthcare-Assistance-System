@@ -6,6 +6,7 @@ import NearbyHealthcare from '../features/facilities/NearbyHealthcare.jsx'
 import MedicineAvailability from '../features/medicine/MedicineAvailability.jsx'
 import PharmacyPortal from '../features/pharmacist/PharmacyPortal.jsx'
 import Profile from '../features/profile/Profile.jsx'
+import SmsSupport from '../features/sms/SmsSupport.jsx'
 import SymptomCheck from '../features/triage/SymptomCheck.jsx'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 
@@ -23,6 +24,7 @@ const NAV_ITEMS = [
   { id: 'symptoms', labelKey: 'nav.symptoms' },
   { id: 'nearby', labelKey: 'nav.nearby' },
   { id: 'medicine', labelKey: 'nav.medicine' },
+  { id: 'sms', labelKey: 'nav.sms' },
   { id: 'login', labelKey: 'nav.login' },
 ]
 
@@ -91,6 +93,12 @@ function App() {
   const openPharmacy = () => {
     setMessage('')
     setView('pharmacy')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const openSms = () => {
+    setMessage('')
+    setView('sms')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -174,6 +182,7 @@ function App() {
                   (item.id === 'symptoms' && view === 'symptoms') ||
                   (item.id === 'nearby' && view === 'nearby') ||
                   (item.id === 'medicine' && view === 'medicine') ||
+                  (item.id === 'sms' && view === 'sms') ||
                   (item.id === 'pharmacy' && view === 'pharmacy') ||
                   (isLoginItem && (view === 'auth' || view === 'profile'))
 
@@ -186,7 +195,9 @@ function App() {
                         ? openNearby
                         : item.id === 'medicine'
                           ? openMedicine
-                          : item.id === 'pharmacy'
+                          : item.id === 'sms'
+                            ? openSms
+                            : item.id === 'pharmacy'
                             ? openPharmacy
                             : isLoginItem
                               ? user
@@ -235,6 +246,8 @@ function App() {
           <NearbyHealthcare onBack={goHome} />
         ) : view === 'medicine' ? (
           <MedicineAvailability onBack={goHome} />
+        ) : view === 'sms' ? (
+          <SmsSupport onBack={goHome} />
         ) : view === 'pharmacy' && user?.role === 'pharmacist' ? (
           <PharmacyPortal onBack={goHome} />
         ) : view === 'auth' ? (
@@ -267,6 +280,7 @@ function App() {
                       if (id === 'symptoms') openSymptoms()
                       else if (id === 'nearby') openNearby()
                       else if (id === 'medicine') openMedicine()
+                      else if (id === 'sms') openSms()
                       else comingSoon(t(titleKey))
                     }}
                   >

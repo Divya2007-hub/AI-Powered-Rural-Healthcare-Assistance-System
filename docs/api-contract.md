@@ -21,6 +21,8 @@ Base path: `/api/v1`
 | POST | `/pharmacist/stock` | Adds a medicine stock entry for the pharmacist's facility |
 | PATCH | `/pharmacist/stock/{id}` | Updates one of the pharmacist's stock entries |
 | DELETE | `/pharmacist/stock/{id}` | Removes one of the pharmacist's stock entries |
+| POST | `/sms/inbound` | Accepts an inbound SMS, runs triage, and sends a reply |
+| GET | `/sms/outbox` | Lists messages sent by the mock SMS provider (development only) |
 
 Further endpoints will be defined here before they are implemented.
 
@@ -344,3 +346,59 @@ belongs to another facility.
 
 Returns `204 No Content`, or `404` when the entry does not exist or belongs to
 another facility.
+
+## SMS support
+
+These endpoints are public because an SMS gateway calls them. The reply uses the
+same triage engine and safety layer as `POST /triage/symptoms`, but it is
+shortened for a text message (maximum 480 characters).
+
+### POST /sms/inbound
+
+```json
+{
+  "from": "+91-90000-00000",
+  "body": "fever, cough",
+  "language": "en"
+}
+```
+
+`from` is required (3–40 characters). `body` is required (1–500 characters).
+`language` is optional and defaults to `en`. Symptoms are separated by commas,
+semicolons, or new lines.
+
+A two-letter language prefix in the body overrides `language`, for example
+`hi: fever, cough` replies in Hindi. Unsupported language codes fall back to
+English.
+
+Response `200 OK`:
+
+```json
+{
+  "reply": "Medical Consultation Recommended: ... Warning signs: ... Next: ... This is general guidance, not a diagnosis...",
+  "urgency_code": "consult",
+  "emergency": false,
+  "language": "en"
+}
+```
+
+`urgency_code` is one of `low`, `consult`, or `urgent`. `emergency` is `true`
+when the safety layer escalates the case. The reply is also handed to the
+configured SMS provider.
+
+Errors: `422` when the body is empty, contains no symptoms after the language
+prefix, or when `from`/`body` fail validation.
+
+### GET /sms/outbox
+
+Development only; returns `404` outside the development environment. Lists the
+messages captured by the mock provider:
+
+```json
+{
+  "messages": [
+    { "to": "+91-90000-00000", "body": "Medical Consultation Recommended: ..." }
+  ],
+  "count": 1
+}
+```

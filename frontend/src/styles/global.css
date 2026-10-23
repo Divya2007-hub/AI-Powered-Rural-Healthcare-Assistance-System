@@ -1585,3 +1585,112 @@ main {
 .stock-fields .field {
   margin-bottom: 0;
 }
+
+.sms {
+  padding: 32px 8px 24px;
+}
+
+.sms-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.sms-card {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(11, 74, 56, 0.06);
+}
+
+.sms-card h2 {
+  margin-top: 0;
+  color: var(--green-900);
+}
+
+.sms-number {
+  color: var(--green-900);
+}
+
+.sms-number strong {
+  color: var(--green-700);
+  letter-spacing: 0.02em;
+}
+
+.sms-demo-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.sms-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 4px 2px 14px;
+  margin-bottom: 8px;
+}
+
+.sms-thread h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.sms-empty {
+  margin: 0;
+  color: var(--muted);
+}
+
+.sms-exchange {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sms-bubble {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  max-width: 88%;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.sms-bubble.is-out {
+  align-self: flex-end;
+  background: var(--mint-100);
+  color: var(--green-900);
+  border-bottom-right-radius: 4px;
+}
+
+.sms-bubble.is-in {
+  align-self: flex-start;
+  background: #e3f0fb;
+  color: #10457e;
+  border-bottom-left-radius: 4px;
+}
+
+.sms-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.sms-form textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+@media (max-width: 900px) {
+  .sms-grid {
+    grid-template-columns: 1fr;
+  }
+}

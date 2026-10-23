@@ -7,6 +7,7 @@ from app.api.v1.routes import (
     history,
     medicines,
     pharmacist,
+    sms,
     triage,
     users,
 )
@@ -21,3 +22,4 @@ api_router.include_router(history.router, tags=["history"])
 api_router.include_router(facilities.router, tags=["facilities"])
 api_router.include_router(medicines.router, tags=["medicines"])
 api_router.include_router(pharmacist.router, tags=["pharmacist"])
+api_router.include_router(sms.router, tags=["sms"])

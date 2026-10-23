@@ -81,4 +81,8 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
   `ai-engine`; unsupported codes fall back to English.
 - Voice symptom input: browsers that support the Web Speech API can dictate
   symptoms in the selected language. Unsupported browsers fall back to typing.
-- SMS support is not built yet.
+- SMS and low-connectivity support: `POST /api/v1/sms/inbound` accepts a text
+  message, runs the same triage engine, and replies with short guidance. A
+  language prefix such as `hi:` switches the reply language. SMS goes through a
+  mock provider (`backend/app/integrations/sms/`) until a real gateway is
+  configured; the "SMS Support" screen demonstrates the flow in-app.

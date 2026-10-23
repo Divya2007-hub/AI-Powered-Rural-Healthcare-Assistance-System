@@ -5,6 +5,7 @@ const en = {
   'nav.symptoms': 'Check Symptoms',
   'nav.nearby': 'Nearby Healthcare',
   'nav.medicine': 'Medicine',
+  'nav.sms': 'SMS',
   'nav.login': 'Login',
   'nav.profile': 'Profile',
   'nav.pharmacy': 'Pharmacy',
@@ -213,6 +214,27 @@ const en = {
     'A woman in a village smiling as she uses a health guidance app on her phone',
   'a11y.heroIllustration':
     'Illustration of a village with fields and a house under a bright sky, and a phone showing a health cross',
+  'sms.title': 'SMS Support',
+  'sms.lead':
+    'No internet connection? Send your symptoms as a text message and get short, safe guidance.',
+  'sms.howTitle': 'How it works',
+  'sms.howBody':
+    'Text your symptoms separated by commas, for example "fever, cough". To get a reply in another language, start with the language code, for example "hi: fever, cough".',
+  'sms.numberLabel': 'Demo number',
+  'sms.demoNote':
+    'This demo uses a mock SMS provider. Nothing is sent to a real phone.',
+  'sms.formTitle': 'Try the demo',
+  'sms.messageLabel': 'Your text message',
+  'sms.messageHint': 'Separate symptoms with commas.',
+  'sms.messagePlaceholder': 'fever, cough, headache',
+  'sms.send': 'Send message',
+  'sms.sending': 'Sending…',
+  'sms.empty': 'Please type a message first.',
+  'sms.error': 'We could not send the demo message. Please try again.',
+  'sms.threadTitle': 'Conversation',
+  'sms.threadEmpty': 'Replies will appear here.',
+  'sms.you': 'You',
+  'sms.replyFrom': 'SevaCare',
 }
 
 export default en
