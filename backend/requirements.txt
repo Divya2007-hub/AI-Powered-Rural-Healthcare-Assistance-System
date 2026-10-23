@@ -1,3 +1,6 @@
 fastapi>=0.115,<1.0
 uvicorn[standard]>=0.30,<1.0
 pydantic-settings>=2.4,<3.0
+# Standalone triage engine package. Install from the backend folder so this
+# relative path resolves against the repository root.
+-e ../ai-engine

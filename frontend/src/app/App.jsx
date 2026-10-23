@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import SymptomCheck from '../features/triage/SymptomCheck.jsx'
 
 /*
  * SevaCare home page.
@@ -35,6 +36,7 @@ const FEATURES = [
 
 function App() {
   const [language, setLanguage] = useState('en')
+  const [view, setView] = useState('home')
   const [message, setMessage] = useState('')
   const [heroFailed, setHeroFailed] = useState(false)
   const languageRef = useRef(null)
@@ -47,6 +49,17 @@ function App() {
   }, [message])
 
   const comingSoon = (label) => setMessage(`${label} is coming soon. This page is not built yet.`)
+
+  const openSymptoms = () => {
+    setMessage('')
+    setView('symptoms')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const goHome = () => {
+    setMessage('')
+    setView('home')
+  }
 
   const chooseLanguage = (code) => {
     setLanguage(code)
@@ -77,19 +90,31 @@ function App() {
 
           <nav className="main-nav" aria-label="Main navigation">
             <ul>
-              {NAV_ITEMS.map((item) => (
-                <li key={item.id}>
-                  {item.id === 'home' ? (
-                    <a className="nav-link is-active" href="/" aria-current="page">
-                      {item.label}
-                    </a>
-                  ) : (
-                    <button type="button" className="nav-link" onClick={() => comingSoon(item.label)}>
+              {NAV_ITEMS.map((item) => {
+                const isActive =
+                  (item.id === 'home' && view === 'home') ||
+                  (item.id === 'symptoms' && view === 'symptoms')
+
+                const onClick =
+                  item.id === 'home'
+                    ? goHome
+                    : item.id === 'symptoms'
+                      ? openSymptoms
+                      : () => comingSoon(item.label)
+
+                return (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      className={`nav-link${isActive ? ' is-active' : ''}`}
+                      aria-current={isActive ? 'page' : undefined}
+                      onClick={onClick}
+                    >
                       {item.label}
                     </button>
-                  )}
-                </li>
-              ))}
+                  </li>
+                )
+              })}
             </ul>
           </nav>
 
@@ -110,6 +135,10 @@ function App() {
       </header>
 
       <main id="main">
+        {view === 'symptoms' ? (
+          <SymptomCheck language={language} onBack={goHome} />
+        ) : (
+          <>
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-copy">
             <h1 id="hero-title">
@@ -124,7 +153,11 @@ function App() {
             <ul className="features" aria-label="What you can do">
               {FEATURES.map(({ id, title, note, Icon }) => (
                 <li key={id}>
-                  <button type="button" className="feature" onClick={() => comingSoon(title)}>
+                  <button
+                    type="button"
+                    className="feature"
+                    onClick={() => (id === 'symptoms' ? openSymptoms() : comingSoon(title))}
+                  >
                     <span className="feature-icon" aria-hidden="true"><Icon /></span>
                     <span className="feature-title">{title}</span>
                     {note && <span className="feature-note">{note}</span>}
@@ -196,6 +229,8 @@ function App() {
             ))}
           </div>
         </section>
+          </>
+        )}
       </main>
 
       <div className="toast-region" role="status" aria-live="polite">

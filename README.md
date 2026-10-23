@@ -55,4 +55,8 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
 
 ## Current status
 
-Project setup only. No application features are implemented yet.
+- Symptom triage API implemented at `POST /api/v1/triage/symptoms`, backed by the
+  standalone `ai-engine` rule-based provider and deterministic safety layer.
+- Frontend "Check Your Symptoms" screen calls the triage API and shows urgency
+  guidance, red flags, and safe next steps.
+- Nearby healthcare, medicine availability, login, and translations are not built yet.
