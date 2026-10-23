@@ -1143,3 +1143,206 @@ main {
   font-weight: 700;
   color: var(--green-900);
 }
+
+/* ==========================================================================
+   Authentication and profile
+   ========================================================================== */
+
+.auth {
+  display: flex;
+  justify-content: center;
+  padding: 32px 8px 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 26px 28px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(19, 111, 84, 0.1);
+}
+
+.auth-card h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.2;
+  color: var(--green-900);
+}
+
+.auth-card .triage-lead {
+  margin-bottom: 20px;
+  font-size: 0.98rem;
+}
+
+.auth-submit {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.auth-switch {
+  margin: 16px 0 0;
+  text-align: center;
+  color: var(--muted);
+}
+
+.link-button {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--green-700);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  color: var(--green-900);
+}
+
+.form-success {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: var(--mint-100);
+  border: 1px solid var(--mint-200);
+  border-radius: 10px;
+  color: var(--green-900);
+  font-weight: 600;
+}
+
+.history-note {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--green-700);
+}
+
+.profile {
+  padding: 32px 8px 24px;
+}
+
+.profile-card {
+  padding: 24px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(19, 111, 84, 0.1);
+}
+
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--green-700);
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.profile-head h1 {
+  margin: 0 0 2px;
+  font-size: 1.6rem;
+  color: var(--green-900);
+}
+
+.profile-email {
+  margin: 0;
+  color: var(--muted);
+}
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.history-section h2 {
+  margin: 0 0 14px;
+  font-size: 1.25rem;
+  color: var(--green-900);
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.history-item {
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(19, 111, 84, 0.08);
+}
+
+.history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.history-head time {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.urgency-pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.urgency-pill.is-low {
+  background: var(--mint-100);
+  color: var(--green-900);
+}
+
+.urgency-pill.is-consult {
+  background: #fdf0d8;
+  color: #7a4d00;
+}
+
+.urgency-pill.is-urgent {
+  background: #fdecea;
+  color: #8a1c14;
+}
+
+.history-symptoms {
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+.history-summary {
+  margin: 0 0 10px;
+  color: var(--muted);
+}
+
+@media (max-width: 560px) {
+  .auth-card,
+  .profile-card {
+    padding: 18px;
+  }
+
+  .history-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -7,7 +7,14 @@ Base path: `/api/v1`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/health` | Reports that the backend is running |
+| POST | `/auth/register` | Creates an account and returns a session token |
+| POST | `/auth/login` | Returns a session token for valid credentials |
+| POST | `/auth/logout` | Invalidates the current session token |
+| GET | `/auth/me` | Returns the signed-in user |
+| PATCH | `/users/me` | Updates the signed-in user's name and language |
 | POST | `/triage/symptoms` | Returns urgency guidance for reported symptoms |
+| GET | `/history/triage` | Lists the signed-in user's saved triage results |
+| DELETE | `/history/triage/{id}` | Deletes one saved triage result |
 | GET | `/facilities/nearby` | Lists nearby healthcare facilities from the database |
 | GET | `/medicines/availability` | Searches medicine stock across facilities |
 
@@ -164,3 +171,98 @@ medicine or a dosage.
 ### Errors
 
 - `422 Unprocessable Entity` when a query parameter fails validation.
+
+## Authentication
+
+Register or log in to receive a session token. Send it on protected requests:
+
+```
+Authorization: Bearer <token>
+```
+
+Tokens expire after 7 days. Passwords are stored as salted PBKDF2-SHA256 hashes,
+and only a hash of each session token is stored in the database.
+
+### POST /auth/register
+
+```json
+{
+  "name": "Asha Devi",
+  "email": "asha@example.com",
+  "password": "at-least-8-characters",
+  "language": "en"
+}
+```
+
+Returns `201 Created` with `{ "token": "...", "user": { ... } }`. Returns `409`
+when the email is already registered.
+
+### POST /auth/login
+
+```json
+{ "email": "asha@example.com", "password": "at-least-8-characters" }
+```
+
+Returns `200 OK` with `{ "token": "...", "user": { ... } }`, or `401` for invalid
+credentials.
+
+### POST /auth/logout
+
+Requires the bearer token. Returns `204 No Content` and invalidates that session.
+
+### GET /auth/me
+
+Requires the bearer token. Returns the user:
+
+```json
+{
+  "id": 1,
+  "name": "Asha Devi",
+  "email": "asha@example.com",
+  "language": "en",
+  "created_at": "2026-10-23T10:00:00"
+}
+```
+
+### PATCH /users/me
+
+Requires the bearer token. Accepts optional `name` and `language` fields and
+returns the updated user.
+
+## GET /history/triage
+
+Requires the bearer token. Returns the signed-in user's triage results, newest
+first, limited by the optional `limit` query parameter (1-100, default 50).
+
+```json
+{
+  "history": [
+    {
+      "id": 1,
+      "symptoms": ["fever", "cough"],
+      "duration_days": 2,
+      "age_years": 34,
+      "language": "en",
+      "urgency": "Medical Consultation Recommended",
+      "urgency_code": "consult",
+      "emergency": false,
+      "red_flags": [],
+      "summary": "Based on the symptoms you shared, a medical consultation is recommended.",
+      "advice": ["Contact a doctor or visit a nearby clinic for a check-up."],
+      "disclaimer": "SevaCare gives general health information only.",
+      "engine": "rule-based-v1",
+      "created_at": "2026-10-23T10:00:00"
+    }
+  ],
+  "count": 1
+}
+```
+
+When a signed-in user calls `POST /triage/symptoms`, the result is saved to their
+history automatically. Anonymous calls are not saved.
+
+## DELETE /history/triage/{id}
+
+Requires the bearer token. Deletes one of the user's own entries and returns
+`204 No Content`. Returns `404` when the entry does not exist or belongs to
+another user.

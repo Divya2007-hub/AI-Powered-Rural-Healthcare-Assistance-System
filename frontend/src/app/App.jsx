@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
+import { fetchMe, logout as apiLogout } from '../api/auth.js'
+import { clearToken, getToken } from '../api/token.js'
+import AuthScreen from '../features/auth/AuthScreen.jsx'
 import NearbyHealthcare from '../features/facilities/NearbyHealthcare.jsx'
 import MedicineAvailability from '../features/medicine/MedicineAvailability.jsx'
+import Profile from '../features/profile/Profile.jsx'
 import SymptomCheck from '../features/triage/SymptomCheck.jsx'
+import { LANGUAGES } from '../i18n/languages.js'
 
 /*
  * SevaCare home page.
@@ -20,15 +25,6 @@ const NAV_ITEMS = [
   { id: 'login', label: 'Login' },
 ]
 
-const LANGUAGES = [
-  { code: 'en', native: 'English', name: 'English' },
-  { code: 'kn', native: 'ಕನ್ನಡ', name: 'Kannada' },
-  { code: 'hi', native: 'हिंदी', name: 'Hindi' },
-  { code: 'ta', native: 'தமிழ்', name: 'Tamil' },
-  { code: 'te', native: 'తెలుగు', name: 'Telugu' },
-  { code: 'mr', native: 'मराठी', name: 'Marathi' },
-]
-
 const FEATURES = [
   { id: 'symptoms', title: 'Symptom Check', note: '', Icon: SymptomIcon },
   { id: 'nearby', title: 'Nearby Healthcare', note: '', Icon: LocationIcon },
@@ -39,6 +35,7 @@ const FEATURES = [
 function App() {
   const [language, setLanguage] = useState('en')
   const [view, setView] = useState('home')
+  const [user, setUser] = useState(null)
   const [message, setMessage] = useState('')
   const [heroFailed, setHeroFailed] = useState(false)
   const languageRef = useRef(null)
@@ -49,6 +46,26 @@ function App() {
     const timer = setTimeout(() => setMessage(''), 4500)
     return () => clearTimeout(timer)
   }, [message])
+
+  // Restore a saved session on first load.
+  useEffect(() => {
+    if (!getToken()) return undefined
+    let active = true
+
+    fetchMe()
+      .then((profile) => {
+        if (!active) return
+        setUser(profile)
+        if (profile.language) setLanguage(profile.language)
+      })
+      .catch(() => {
+        if (active) clearToken()
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   const comingSoon = (label) => setMessage(`${label} is coming soon. This page is not built yet.`)
 
@@ -70,8 +87,42 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const openAuth = () => {
+    setMessage('')
+    setView('auth')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const openProfile = () => {
+    setMessage('')
+    setView('profile')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const goHome = () => {
     setMessage('')
+    setView('home')
+  }
+
+  const handleAuthenticated = (authenticatedUser) => {
+    setUser(authenticatedUser)
+    if (authenticatedUser.language) setLanguage(authenticatedUser.language)
+    setView('profile')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleUserUpdated = (updatedUser) => {
+    setUser(updatedUser)
+    if (updatedUser.language) setLanguage(updatedUser.language)
+  }
+
+  const handleLogout = async () => {
+    try {
+      await apiLogout()
+    } catch {
+      // Clearing the local session below is enough if the request fails.
+    }
+    setUser(null)
     setView('home')
   }
 
@@ -105,11 +156,13 @@ function App() {
           <nav className="main-nav" aria-label="Main navigation">
             <ul>
               {NAV_ITEMS.map((item) => {
+                const isLoginItem = item.id === 'login'
                 const isActive =
                   (item.id === 'home' && view === 'home') ||
                   (item.id === 'symptoms' && view === 'symptoms') ||
                   (item.id === 'nearby' && view === 'nearby') ||
-                  (item.id === 'medicine' && view === 'medicine')
+                  (item.id === 'medicine' && view === 'medicine') ||
+                  (isLoginItem && (view === 'auth' || view === 'profile'))
 
                 const onClick =
                   item.id === 'home'
@@ -120,7 +173,13 @@ function App() {
                         ? openNearby
                         : item.id === 'medicine'
                           ? openMedicine
-                          : () => comingSoon(item.label)
+                          : isLoginItem
+                            ? user
+                              ? openProfile
+                              : openAuth
+                            : () => comingSoon(item.label)
+
+                const label = isLoginItem && user ? 'Profile' : item.label
 
                 return (
                   <li key={item.id}>
@@ -130,7 +189,7 @@ function App() {
                       aria-current={isActive ? 'page' : undefined}
                       onClick={onClick}
                     >
-                      {item.label}
+                      {label}
                     </button>
                   </li>
                 )
@@ -156,11 +215,20 @@ function App() {
 
       <main id="main">
         {view === 'symptoms' ? (
-          <SymptomCheck language={language} onBack={goHome} />
+          <SymptomCheck language={language} isAuthenticated={Boolean(user)} onBack={goHome} />
         ) : view === 'nearby' ? (
           <NearbyHealthcare onBack={goHome} />
         ) : view === 'medicine' ? (
           <MedicineAvailability onBack={goHome} />
+        ) : view === 'auth' ? (
+          <AuthScreen onAuthenticated={handleAuthenticated} onBack={goHome} />
+        ) : view === 'profile' && user ? (
+          <Profile
+            user={user}
+            onUserUpdated={handleUserUpdated}
+            onLogout={handleLogout}
+            onBack={goHome}
+          />
         ) : (
           <>
         <section className="hero" aria-labelledby="hero-title">

@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.routes import api_router
 from app.core.config import settings
 from app.core.database import Base, SessionLocal, engine
-from app.models import facility, medicine  # noqa: F401  (registers models with Base)
+from app.models import facility, history, medicine, user  # noqa: F401  (registers models with Base)
 
 
 def create_app() -> FastAPI:

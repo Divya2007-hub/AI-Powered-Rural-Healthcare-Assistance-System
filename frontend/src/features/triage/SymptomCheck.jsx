@@ -22,7 +22,7 @@ function parseOptionalNumber(value) {
   return Number.isFinite(parsed) ? parsed : null
 }
 
-export default function SymptomCheck({ language, onBack }) {
+export default function SymptomCheck({ language, isAuthenticated = false, onBack }) {
   const [symptomsText, setSymptomsText] = useState('')
   const [age, setAge] = useState('')
   const [duration, setDuration] = useState('')
@@ -179,6 +179,10 @@ export default function SymptomCheck({ language, onBack }) {
           <p className="safety-note">
             In an emergency, contact a doctor or your local emergency number right away.
           </p>
+
+          {isAuthenticated && (
+            <p className="history-note">Results are saved to your profile history.</p>
+          )}
         </form>
 
         <div className="triage-result" aria-live="polite">

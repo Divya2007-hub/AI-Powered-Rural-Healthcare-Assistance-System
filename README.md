@@ -66,4 +66,6 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
 - `GET /api/v1/medicines/availability` searches medicine stock by name, place,
   and stock status; the "Medicine Availability" screen shows stock, price, and
   the supplying facility.
-- Login and translations are not built yet.
+- Accounts: register/login/logout with DB-backed session tokens, profile editing,
+  and triage history that is saved automatically for signed-in users.
+- Translations, SMS support, and the pharmacist portal are not built yet.
