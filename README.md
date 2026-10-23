@@ -59,4 +59,8 @@ change a value. Defaults work without a `.env` file. Never commit `.env`.
   standalone `ai-engine` rule-based provider and deterministic safety layer.
 - Frontend "Check Your Symptoms" screen calls the triage API and shows urgency
   guidance, red flags, and safe next steps.
-- Nearby healthcare, medicine availability, login, and translations are not built yet.
+- `GET /api/v1/facilities/nearby` lists facilities from a local SQLite database,
+  seeded with demo data on first start.
+- Frontend "Nearby Healthcare" screen filters facilities by place, type, and
+  emergency/24x7 availability, and shows distance and contact details.
+- Medicine availability, login, and translations are not built yet.

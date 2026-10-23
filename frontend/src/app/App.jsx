@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import NearbyHealthcare from '../features/facilities/NearbyHealthcare.jsx'
 import SymptomCheck from '../features/triage/SymptomCheck.jsx'
 
 /*
@@ -56,6 +57,12 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const openNearby = () => {
+    setMessage('')
+    setView('nearby')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const goHome = () => {
     setMessage('')
     setView('home')
@@ -93,14 +100,17 @@ function App() {
               {NAV_ITEMS.map((item) => {
                 const isActive =
                   (item.id === 'home' && view === 'home') ||
-                  (item.id === 'symptoms' && view === 'symptoms')
+                  (item.id === 'symptoms' && view === 'symptoms') ||
+                  (item.id === 'nearby' && view === 'nearby')
 
                 const onClick =
                   item.id === 'home'
                     ? goHome
                     : item.id === 'symptoms'
                       ? openSymptoms
-                      : () => comingSoon(item.label)
+                      : item.id === 'nearby'
+                        ? openNearby
+                        : () => comingSoon(item.label)
 
                 return (
                   <li key={item.id}>
@@ -137,6 +147,8 @@ function App() {
       <main id="main">
         {view === 'symptoms' ? (
           <SymptomCheck language={language} onBack={goHome} />
+        ) : view === 'nearby' ? (
+          <NearbyHealthcare onBack={goHome} />
         ) : (
           <>
         <section className="hero" aria-labelledby="hero-title">
@@ -156,7 +168,11 @@ function App() {
                   <button
                     type="button"
                     className="feature"
-                    onClick={() => (id === 'symptoms' ? openSymptoms() : comingSoon(title))}
+                    onClick={() => {
+                      if (id === 'symptoms') openSymptoms()
+                      else if (id === 'nearby') openNearby()
+                      else comingSoon(title)
+                    }}
                   >
                     <span className="feature-icon" aria-hidden="true"><Icon /></span>
                     <span className="feature-title">{title}</span>

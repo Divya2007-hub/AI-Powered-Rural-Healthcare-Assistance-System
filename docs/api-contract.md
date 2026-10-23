@@ -8,6 +8,7 @@ Base path: `/api/v1`
 |---|---|---|
 | GET | `/health` | Reports that the backend is running |
 | POST | `/triage/symptoms` | Returns urgency guidance for reported symptoms |
+| GET | `/facilities/nearby` | Lists nearby healthcare facilities from the database |
 
 Further endpoints will be defined here before they are implemented.
 
@@ -74,3 +75,45 @@ and never recommends medicine.
 - Unknown symptoms and engine failures default to `Medical Consultation Recommended`,
   never to `Low Urgency`.
 - Responses never name a disease or recommend a medicine or dosage.
+
+## GET /facilities/nearby
+
+Returns healthcare facilities stored in the local SQLite database, sorted by
+distance (closest first, unknown distances last).
+
+### Query parameters
+
+| Parameter | Type | Rules |
+|---|---|---|
+| `city` | string | Optional. Case-insensitive partial match. Max 100 characters. |
+| `type` | string | Optional. Case-insensitive partial match, e.g. `PHC`, `CHC`, `Hospital`, `Pharmacy`. Max 50 characters. |
+| `emergency_only` | boolean | Optional. Defaults to `false`. Keeps facilities with emergency services or 24x7 hours. |
+| `limit` | integer | Optional. Defaults to 20. Range 1-50. |
+
+### Response `200 OK`
+
+```json
+{
+  "facilities": [
+    {
+      "id": 4,
+      "name": "Seva Pharmacy",
+      "type": "Pharmacy",
+      "address": "Market Street, Rampur Village",
+      "city": "Rampur",
+      "state": "Uttar Pradesh",
+      "phone": "+91-98765-43212",
+      "latitude": 26.848,
+      "longitude": 80.947,
+      "open_24x7": false,
+      "emergency_services": false,
+      "distance_km": 1.6
+    }
+  ],
+  "count": 1
+}
+```
+
+### Errors
+
+- `422 Unprocessable Entity` when a query parameter fails validation.
